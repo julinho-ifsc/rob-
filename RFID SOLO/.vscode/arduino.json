@@ -1,6 +1,0 @@
-{
-    "board": "arduino:avr:mega",
-    "configuration": "cpu=atmega2560",
-    "port": "/dev/ttyACM1",
-    "sketch": "Teste_RFID_solo_21-10.ino"
-}
