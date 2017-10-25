@@ -1,12 +1,12 @@
 /*Pinagem do arduino*/
- #include <NewPing.h>
+#include <NewPing.h>
 
- #define TRIGGER_PIN 22
- #define ECHO_PIN 23
- #define MAX_DISTANCE 150
+#define TRIGGER_PIN 22
+#define ECHO_PIN 23
+#define MAX_DISTANCE 150
 
- NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
- 
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
 //motor 1
 int velocidadeA = 34;
 int IN1 = 35 ;
@@ -27,10 +27,9 @@ int velocidadeD = 13;
 int IN7 = 11 ;
 int IN8 = 12 ;
 
-
 //variavel auxiliar
 int velocidade = 0;
- 
+
 //Inicializa Pinos
 void setup(){
   Serial.begin(9600);
@@ -49,91 +48,93 @@ void setup(){
   pinMode(velocidadeC,OUTPUT);
   pinMode(velocidadeD,OUTPUT);
 }
- 
- void FRENTE() {
-    // Motor 1
-    digitalWrite(IN1,HIGH); 
-    digitalWrite(IN2,LOW);
-    analogWrite(velocidadeA,255);
 
-    // Motor 2
-    digitalWrite(IN3,HIGH);
-    digitalWrite(IN4,LOW);
-    analogWrite(velocidadeB,255);
+void FRENTE() {
+  // Motor 1
+  digitalWrite(IN1,HIGH);
+  digitalWrite(IN2,LOW);
+  analogWrite(velocidadeA,255);
 
-    // Motor 3
-    digitalWrite(IN5,HIGH);
-    digitalWrite(IN6,LOW);
-    analogWrite(velocidadeC,100);
-    
-    // Motor 4
-    digitalWrite(IN7,HIGH);
-    digitalWrite(IN8,LOW);
-    analogWrite(velocidadeD,100);
- }
-   void DIREITA() {
-    // Motor 1
-    digitalWrite(IN1,HIGH); 
-    digitalWrite(IN2,LOW);
-    analogWrite(velocidadeA,100);
+  // Motor 2
+  digitalWrite(IN3,HIGH);
+  digitalWrite(IN4,LOW);
+  analogWrite(velocidadeB,255);
 
-    // Motor 2
-    digitalWrite(IN3,LOW);
-    digitalWrite(IN4,HIGH);
-    analogWrite(velocidadeB,100);
+  // Motor 3
+  digitalWrite(IN5,HIGH);
+  digitalWrite(IN6,LOW);
+  analogWrite(velocidadeC,100);
 
-    // Motor 3
-    digitalWrite(IN5,HIGH);
-    digitalWrite(IN6,LOW);
-    analogWrite(velocidadeC,100);
-    
-    // Motor 4
-    digitalWrite(IN7,LOW);
-    digitalWrite(IN8,HIGH);
-    analogWrite(velocidadeD,100);
- }
-  void ESQUERDA() {
-    // Motor 1
-    digitalWrite(IN1,LOW); 
-    digitalWrite(IN2,HIGH);
-    analogWrite(velocidadeA,100);
+  // Motor 4
+  digitalWrite(IN7,HIGH);
+  digitalWrite(IN8,LOW);
+  analogWrite(velocidadeD,100);
+}
 
-    // Motor 2
-    digitalWrite(IN3,HIGH);
-    digitalWrite(IN4,LOW);
-    analogWrite(velocidadeB,100);
+void DIREITA() {
+  // Motor 1
+  digitalWrite(IN1,HIGH);
+  digitalWrite(IN2,LOW);
+  analogWrite(velocidadeA,100);
 
-    // Motor 3
-    digitalWrite(IN5,LOW);
-    digitalWrite(IN6,HIGH);
-    analogWrite(velocidadeC,100);
-    
-    // Motor 4
-    digitalWrite(IN7,HIGH);
-    digitalWrite(IN8,LOW);
-    analogWrite(velocidadeD,100);
- }
+  // Motor 2
+  digitalWrite(IN3,LOW);
+  digitalWrite(IN4,HIGH);
+  analogWrite(velocidadeB,100);
 
-   void PARAR() {
-    // Motor 1
-    digitalWrite(IN1,HIGH); 
-    digitalWrite(IN2,HIGH);
-    
+  // Motor 3
+  digitalWrite(IN5,HIGH);
+  digitalWrite(IN6,LOW);
+  analogWrite(velocidadeC,100);
 
-    // Motor 2
-    digitalWrite(IN3,HIGH);
-    digitalWrite(IN4,HIGH);
-    
+  // Motor 4
+  digitalWrite(IN7,LOW);
+  digitalWrite(IN8,HIGH);
+  analogWrite(velocidadeD,100);
+}
 
-    // Motor 3
-    digitalWrite(IN5,HIGH);
-    digitalWrite(IN6,HIGH);
-    
-    
-    // Motor 4
-    digitalWrite(IN7,HIGH);
-    digitalWrite(IN8,HIGH);
- }
+void ESQUERDA() {
+  // Motor 1
+  digitalWrite(IN1,LOW);
+  digitalWrite(IN2,HIGH);
+  analogWrite(velocidadeA,100);
+
+  // Motor 2
+  digitalWrite(IN3,HIGH);
+  digitalWrite(IN4,LOW);
+  analogWrite(velocidadeB,100);
+
+  // Motor 3
+  digitalWrite(IN5,LOW);
+  digitalWrite(IN6,HIGH);
+  analogWrite(velocidadeC,100);
+
+  // Motor 4
+  digitalWrite(IN7,HIGH);
+  digitalWrite(IN8,LOW);
+  analogWrite(velocidadeD,100);
+}
+
+void PARAR() {
+  // Motor 1
+  digitalWrite(IN1,HIGH);
+  digitalWrite(IN2,HIGH);
+
+
+  // Motor 2
+  digitalWrite(IN3,HIGH);
+  digitalWrite(IN4,HIGH);
+
+
+  // Motor 3
+  digitalWrite(IN5,HIGH);
+  digitalWrite(IN6,HIGH);
+
+
+  // Motor 4
+  digitalWrite(IN7,HIGH);
+  digitalWrite(IN8,HIGH);
+}
 
 void loop(){
   Serial.print("Distancia: ");
@@ -143,8 +144,7 @@ void loop(){
   if (cm < 20) {
     PARAR();
     Serial.println("PARA JULINHO");
-  }
-  else{
+  } else{
     FRENTE();
     Serial.println("FRENTE JULINHO");
   }
