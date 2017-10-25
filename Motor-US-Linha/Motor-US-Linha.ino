@@ -171,25 +171,45 @@ void ESQUERDAB() {
     digitalWrite(IN8,HIGH);
     analogWrite(velocidadeD,130);
  }
+
 void PARAR() {
     // Motor 1
     digitalWrite(IN1,HIGH); 
     digitalWrite(IN2,HIGH);
     
-
     // Motor 2
     digitalWrite(IN3,HIGH);
     digitalWrite(IN4,HIGH);
     
-
     // Motor 3
     digitalWrite(IN5,HIGH);
     digitalWrite(IN6,HIGH);
-    
-    
+        
     // Motor 4
     digitalWrite(IN7,HIGH);
     digitalWrite(IN8,HIGH);
+ }
+
+void VOLTAR() {
+    // Motor 1
+    digitalWrite(IN1,LOW); 
+    digitalWrite(IN2,HIGH);
+    analogWrite(velocidadeA,130);
+
+    // Motor 2
+    digitalWrite(IN3,LOW);
+    digitalWrite(IN4,HIGH);
+    analogWrite(velocidadeB,130);
+
+    // Motor 3
+    digitalWrite(IN5,LOW);
+    digitalWrite(IN6,HIGH);
+    analogWrite(velocidadeC,130);
+    
+    // Motor 4
+    digitalWrite(IN7,LOW);
+    digitalWrite(IN8,HIGH);
+    analogWrite(velocidadeD,130);
  }
 
 void loop() {
@@ -240,6 +260,16 @@ void loop() {
         else if (sinal_esquerda < referencia && sinal_centro > referencia) {
         Serial.println("ESQUERDAB");
         ESQUERDAB();
+        }
+        else if (sinal_direita > referencia && sinal_centro > referencia && sinal_esquerda > referencia) {
+        Serial.println("PARAR");
+        PARAR();
+        delay(1000);
+        Serial.println("VOLTAR");
+        VOLTAR();
+        delay(1500);
+        Serial.println("DIREITAB");
+        DIREITAB();
         }
         else {
         Serial.println("PARAR");
