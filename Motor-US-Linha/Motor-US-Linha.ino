@@ -14,9 +14,9 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 #define sensorPD A11
 
 int referencia = 900;
-int sinal_direita = 0;
-int sinal_centro = 0;
-int sinal_esquerda = 0;
+int sinalDireita = 0;
+int sinalCentro = 0;
+int sinalEsquerda = 0;
 
 //motor 1
 int velocidadeA = 34;
@@ -38,172 +38,171 @@ int velocidadeD = 13;
 int IN7 = 11 ;
 int IN8 = 12 ;
 
-
 //variavel auxiliar
 int velocidade = 0;
 
 void setup() {
   Serial.begin(115200);
   pinMode(BUZZER, OUTPUT);
-  pinMode(TRIGGER_PIN,OUTPUT);
-  pinMode(ECHO_PIN,INPUT);
-  pinMode(IN1,OUTPUT);
-  pinMode(IN2,OUTPUT);
-  pinMode(IN3,OUTPUT);
-  pinMode(IN4,OUTPUT);
-  pinMode(IN5,OUTPUT);
-  pinMode(IN6,OUTPUT);
-  pinMode(IN7,OUTPUT);
-  pinMode(IN8,OUTPUT);
-  pinMode(velocidadeA,OUTPUT);
-  pinMode(velocidadeB,OUTPUT);
-  pinMode(velocidadeC,OUTPUT);
-  pinMode(velocidadeD,OUTPUT);
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(IN5, OUTPUT);
+  pinMode(IN6, OUTPUT);
+  pinMode(IN7, OUTPUT);
+  pinMode(IN8, OUTPUT);
+  pinMode(velocidadeA, OUTPUT);
+  pinMode(velocidadeB, OUTPUT);
+  pinMode(velocidadeC, OUTPUT);
+  pinMode(velocidadeD, OUTPUT);
 }
 
-void FRENTE() {
+void frente() {
   // Motor 1
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN2,LOW);
-  analogWrite(velocidadeA,130);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(velocidadeA, 130);
 
   // Motor 2
-  digitalWrite(IN3,HIGH);
-  digitalWrite(IN4,LOW);
-  analogWrite(velocidadeB,130);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(velocidadeB, 130);
 
   // Motor 3
-  digitalWrite(IN5,HIGH);
-  digitalWrite(IN6,LOW);
-  analogWrite(velocidadeC,130);
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, LOW);
+  analogWrite(velocidadeC, 130);
 
   // Motor 4
-  digitalWrite(IN7,HIGH);
-  digitalWrite(IN8,LOW);
-  analogWrite(velocidadeD,130);
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, LOW);
+  analogWrite(velocidadeD, 130);
 }
 
-void DIREITAB() {
+void direitaB() {
   // Motor 1
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN2,LOW);
-  analogWrite(velocidadeA,130);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(velocidadeA, 130);
 
   // Motor 2
-  digitalWrite(IN3,LOW);
-  digitalWrite(IN4,HIGH);
-  analogWrite(velocidadeB,130);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  analogWrite(velocidadeB, 130);
 
   // Motor 3
-  digitalWrite(IN5,LOW);
-  digitalWrite(IN6,HIGH);
-  analogWrite(velocidadeC,130);
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, HIGH);
+  analogWrite(velocidadeC, 130);
 
   // Motor 4
-  digitalWrite(IN7,HIGH);
-  digitalWrite(IN8,LOW);
-  analogWrite(velocidadeD,130);
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, LOW);
+  analogWrite(velocidadeD, 130);
 }
 
- void DIREITAF() {
+ void direitaF() {
   // Motor 1
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN2,LOW);
-  analogWrite(velocidadeA,130);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(velocidadeA, 130);
 
   // Motor 2
-  digitalWrite(IN3,LOW);
-  digitalWrite(IN4,HIGH);
-  analogWrite(velocidadeB,100);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  analogWrite(velocidadeB, 100);
 
   // Motor 3
-  digitalWrite(IN5,LOW);
-  digitalWrite(IN6,HIGH);
-  analogWrite(velocidadeC,100);
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, HIGH);
+  analogWrite(velocidadeC, 100);
 
   // Motor 4
-  digitalWrite(IN7,HIGH);
-  digitalWrite(IN8,LOW);
-  analogWrite(velocidadeD,130);
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, LOW);
+  analogWrite(velocidadeD, 130);
 }
 
-void ESQUERDAB() {
+void esquerdaB() {
   // Motor 1
-  digitalWrite(IN1,LOW);
-  digitalWrite(IN2,HIGH);
-  analogWrite(velocidadeA,130);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  analogWrite(velocidadeA, 130);
 
   // Motor 2
-  digitalWrite(IN3,HIGH);
-  digitalWrite(IN4,LOW);
-  analogWrite(velocidadeB,130);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(velocidadeB, 130);
 
   // Motor 3
-  digitalWrite(IN5,HIGH);
-  digitalWrite(IN6,LOW);
-  analogWrite(velocidadeC,130);
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, LOW);
+  analogWrite(velocidadeC, 130);
 
   // Motor 4
-  digitalWrite(IN7,LOW);
-  digitalWrite(IN8,HIGH);
-  analogWrite(velocidadeD,130);
+  digitalWrite(IN7, LOW);
+  digitalWrite(IN8, HIGH);
+  analogWrite(velocidadeD, 130);
 }
 
-void ESQUERDAF() {
+void esquerdaF() {
   // Motor 1
-  digitalWrite(IN1,LOW);
-  digitalWrite(IN2,HIGH);
-  analogWrite(velocidadeA,100);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  analogWrite(velocidadeA, 100);
 
   // Motor 2
-  digitalWrite(IN3,HIGH);
-  digitalWrite(IN4,LOW);
-  analogWrite(velocidadeB,130);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(velocidadeB, 130);
 
   // Motor 3
-  digitalWrite(IN5,HIGH);
-  digitalWrite(IN6,LOW);
-  analogWrite(velocidadeC,100);
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, LOW);
+  analogWrite(velocidadeC, 100);
 
   // Motor 4
-  digitalWrite(IN7,LOW);
-  digitalWrite(IN8,HIGH);
-  analogWrite(velocidadeD,130);
+  digitalWrite(IN7, LOW);
+  digitalWrite(IN8, HIGH);
+  analogWrite(velocidadeD, 130);
 }
 
-void PARAR() {
+void parar() {
   // Motor 1
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN2,HIGH);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, HIGH);
 
   // Motor 2
-  digitalWrite(IN3,HIGH);
-  digitalWrite(IN4,HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, HIGH);
 
   // Motor 3
-  digitalWrite(IN5,HIGH);
-  digitalWrite(IN6,HIGH);
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, HIGH);
 
   // Motor 4
-  digitalWrite(IN7,HIGH);
-  digitalWrite(IN8,HIGH);
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, HIGH);
 }
 
-void VOLTAR() {
+void voltar() {
   // Motor 1
-  digitalWrite(IN1,LOW);
-  digitalWrite(IN2,HIGH);
-  analogWrite(velocidadeA,130);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  analogWrite(velocidadeA, 130);
 
   // Motor 2
-  digitalWrite(IN3,LOW);
-  digitalWrite(IN4,HIGH);
-  analogWrite(velocidadeB,130);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  analogWrite(velocidadeB, 130);
 
   // Motor 3
-  digitalWrite(IN5,LOW);
-  digitalWrite(IN6,HIGH);
-  analogWrite(velocidadeC,130);
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, HIGH);
+  analogWrite(velocidadeC, 130);
 
   // Motor 4
   digitalWrite(IN7,LOW);
@@ -216,54 +215,54 @@ void loop() {
   Serial.println(sonar.ping_cm());
   float cm = sonar.ping_cm();
 
-  sinal_esquerda = analogRead(sensorE);
-  sinal_centro = analogRead(sensorC);
-  sinal_direita = analogRead(sensorD);
+  sinalEsquerda = analogRead(sensorE);
+  sinalCentro = analogRead(sensorC);
+  sinalDireita = analogRead(sensorD);
 
   Serial.print("Nivel Esquerdo : ");
-  Serial.println(sinal_esquerda);
+  Serial.println(sinalEsquerda);
   Serial.print("Nível Centro: ");
-  Serial.println(sinal_centro);
+  Serial.println(sinalCentro);
   Serial.print("Nivel Direito : ");
-  Serial.println(sinal_direita);
+  Serial.println(sinalDireita);
   Serial.println("");
 
   if (cm < 15) {
     Serial.println("PARAR");
-    PARAR();
+    parar();
   } else {
     Serial.print("ANDAR P/ ");
 
-    if (sinal_centro < referencia ) {
+    if (sinalCentro < referencia ) {
       Serial.println("FRENTE");
-      FRENTE();
-    } else if (sinal_direita < referencia && sinal_centro < referencia && sinal_esquerda < referencia) {
+      frente();
+    } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
       Serial.println("FRENTE");
-      FRENTE();
-    } else if (sinal_direita < referencia && sinal_centro < referencia && sinal_esquerda > referencia) {
+      frente();
+    } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda > referencia) {
       Serial.println("ESQUERDAF");
-      ESQUERDAF();
-    } else if (sinal_direita > referencia && sinal_centro < referencia && sinal_esquerda < referencia){
+      esquerdaF();
+    } else if (sinalDireita > referencia && sinalCentro < referencia && sinalEsquerda < referencia){
       Serial.println("DIREITAF");
-      DIREITAF();
-    } else if (sinal_direita < referencia && sinal_centro > referencia) {
+      direitaF();
+    } else if (sinalDireita < referencia && sinalCentro > referencia) {
       Serial.println("DIREITAB");
-      DIREITAB();
-    } else if (sinal_esquerda < referencia && sinal_centro > referencia) {
+      direitaB();
+    } else if (sinalEsquerda < referencia && sinalCentro > referencia) {
       Serial.println("ESQUERDAB");
-      ESQUERDAB();
-    } else if (sinal_direita > referencia && sinal_centro > referencia && sinal_esquerda > referencia) {
+      esquerdaB();
+    } else if (sinalDireita > referencia && sinalCentro > referencia && sinalEsquerda > referencia) {
       Serial.println("PARAR");
-      PARAR();
+      parar();
       delay(1000);
       Serial.println("VOLTAR");
-      VOLTAR();
+      voltar();
       delay(1500);
       Serial.println("DIREITAB");
-      DIREITAB();
+      direitaB();
     } else {
       Serial.println("PARAR");
-      PARAR();
+      parar();
     }
   }
 

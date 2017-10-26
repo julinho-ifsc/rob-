@@ -1,8 +1,3 @@
-//Programa : Motor shield com sensor TCRT5000
-//Adaptacoes : FILIPEFLOP
-//
-//Baseado no programa original de Michael McRoberts
-
 int SENSOR1, SENSOR2, SENSOR3, SENSOR4, SENSOR5;
 
 //deslocamentos de calibracao

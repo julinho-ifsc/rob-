@@ -1,4 +1,3 @@
-// Carrega as bibliotecas
 #include <SPI.h>
 #include <WiFiEsp.h>
 #include <WiFiEspClient.h>
@@ -12,7 +11,7 @@
 #define PASSWORD "123456789"
 
 // MQTT
-IPAddress server(191,36,8,5); //Servidor
+IPAddress server(191, 36, 8, 5); //Servidor
 int PORT = 1883;
 
 //RFID
@@ -30,7 +29,7 @@ PubSubClient mqttClient(espClient);
 //Variáveis auxiliares MQTT
 char resp[20];
 
-void setup(){
+void setup() {
   Serial.begin(9600);
   Serial1.begin(115200);
   SPI.begin();
@@ -41,15 +40,14 @@ void setup(){
   Serial.println("Feito");
 
   Serial.println("- Configurando modulo...");
-  sendData("AT+CWMODE=1\r\n",1000,DEBUG); // modo de operação STA
+  sendData("AT+CWMODE=1\r\n", 1000, DEBUG); // modo de operação STA
   Serial.println("- Resetando modulo...");
-  sendData("AT+RST\r\n",1000,DEBUG); // resetar módulo
+  sendData("AT+RST\r\n", 1000, DEBUG); // resetar módulo
   Serial.println("- Conectando no roteador");
-  sendData("AT+CWJAP=\"julinho\",\"123456789\"\r\n", 5000, DEBUG); // conectar na rede wifi
+  sendData("AT+CWJAP=\"julinho\", \"123456789\"\r\n", 5000, DEBUG); // conectar na rede wifi
 
   // initialize ESP module
   WiFi.init(&Serial1);
-
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
@@ -63,7 +61,7 @@ void setup(){
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(SSID);
     // Connect to WPA/WPA2 network
-    status = WiFi.begin(SSID,PASSWORD);
+    status = WiFi.begin(SSID, PASSWORD);
   }
 
   // you're connected now, so print out the data
@@ -75,12 +73,12 @@ void setup(){
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  if (strcmp(topic,"julinho/rota")==0){
+  if (strcmp(topic, "julinho/rota") == 0){
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
 
-    for (int i=0;i<length;i++) {
+    for (int i = 0; i < length; i++) {
       Serial.print((char)payload[i]);
     }
 
@@ -89,13 +87,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println((char*)payload);
   }
 
-  if (strcmp(topic,"julinho/dev") == 0){
+  if (strcmp(topic, "julinho/dev") == 0){
     String msg = "";
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
 
-    for (int i=0;i<length;i++) {
+    for (int i = 0; i < length; i++) {
       Serial.print((char)payload[i]);
       msg += (char)payload[i];
     }
@@ -129,8 +127,8 @@ void reconnect() {
     // Attempt to connect, just a name to identify the client
     if (mqttClient.connect("arduinoClient")) {
       Serial.println("connected");
-      mqttClient.publish("julinho/enable","1");
-      mqttClient.publish("julinho/sos","0");
+      mqttClient.publish("julinho/enable", "1");
+      mqttClient.publish("julinho/sos", "0");
       mqttClient.subscribe("julinho/rota");
       mqttClient.subscribe("julinho/dev");
     } else {
@@ -148,7 +146,7 @@ void loop() {
   mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
 
   // put your main code here, to run repeatedly:
-  int value = random(100,105);
+  int value = random(100, 105);
 
   if (!mqttClient.connected()) {
     reconnect();
