@@ -12,7 +12,11 @@
 #define PASSWORD "bi91654704"
 
 // MQTT
+<<<<<<< HEAD:rfid-mqtt/rfid-mqtt.ino
 IPAddress server(198,41,30,241); //Servidor 
+=======
+IPAddress server(191,36,8,24); //Servidor 
+>>>>>>> 80467243f5bb992124ad779c36d207021598e85a:rfid-mqtt/rfid-mqtt.ino
 int PORT = 1883;
 
 //RFID
@@ -30,7 +34,10 @@ PubSubClient mqttClient(espClient);
 
 //Variáveis auxiliares MQTT
 char message_buff[100];
+<<<<<<< HEAD:rfid-mqtt/rfid-mqtt.ino
 char resp[20];
+=======
+>>>>>>> 80467243f5bb992124ad779c36d207021598e85a:rfid-mqtt/rfid-mqtt.ino
 
 void setup(){
     Serial.begin(9600);
@@ -77,12 +84,15 @@ void setup(){
 
 void callback(char* topic, byte* payload, unsigned int length) { 
   int i = 0;
+<<<<<<< HEAD:rfid-mqtt/rfid-mqtt.ino
 
 //    Serial.print("Message arrived [");
 //    Serial.print(topic);
 //    Serial.println("] ");
   
   
+=======
+>>>>>>> 80467243f5bb992124ad779c36d207021598e85a:rfid-mqtt/rfid-mqtt.ino
   if (strcmp(topic,"julinho/rota")==0){
     for (int i=0;i<length;i++) {
       Serial.print((char)payload[i]);
@@ -93,6 +103,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println("ROTA = ");
     Serial.println((char*)payload);
   }
+<<<<<<< HEAD:rfid-mqtt/rfid-mqtt.ino
 //
 //  if (strcmp(topic,"julinho/#")==0){
 //    String msg = "";
@@ -108,6 +119,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
 //    String msgString = String(message_buff);
 //    Serial.println("Payload: " + msgString);
 //  }
+=======
+
+  if (strcmp(topic,"julinho/dev")==0){
+    String msg = "";
+    Serial.print("Message arrived [");
+    Serial.print(topic);
+    Serial.print("] ");
+    for (int i=0;i<length;i++) {
+      Serial.print((char)payload[i]);
+      msg += (char)payload[i];
+      message_buff[i] = payload[i];
+    }
+    message_buff[i] = '\0';
+    String msgString = String(message_buff);
+    Serial.println("Payload: " + msgString);
+  }
+>>>>>>> 80467243f5bb992124ad779c36d207021598e85a:rfid-mqtt/rfid-mqtt.ino
 }
 
 String sendData(const char* command, const int timeout, boolean debug){
@@ -166,19 +194,29 @@ void loop() {
   }
     
   // put your main code here, to run repeatedly:
+<<<<<<< HEAD:rfid-mqtt/rfid-mqtt.ino
   //int value = random(1,10);
   if (!mqttClient.connected()) {
     reconnect();
   } 
   else {
       
+=======
+  if (!mqttClient.connected()) {
+    reconnect();
+  } else {
+>>>>>>> 80467243f5bb992124ad779c36d207021598e85a:rfid-mqtt/rfid-mqtt.ino
       rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
       mqttClient.publish("julinho/check", message_buff);
       Serial.print("Message sended: ");
       Serial.println(message_buff);
+<<<<<<< HEAD:rfid-mqtt/rfid-mqtt.ino
 
     }
     mqttClient.loop();
     return;
  
+=======
+    }
+>>>>>>> 80467243f5bb992124ad779c36d207021598e85a:rfid-mqtt/rfid-mqtt.ino
 }
