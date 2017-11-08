@@ -2,10 +2,9 @@
 
 #define TRIGGER_PIN 23
 #define ECHO_PIN 22
-#define MAX_DISTANCE 150
 #define BUZZER 24
 
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+NewPing sonar(TRIGGER_PIN, ECHO_PIN);
 
 #define sensorPE A15
 #define sensorE A14
@@ -64,110 +63,110 @@ void frente() {
   // Motor 1
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
-  analogWrite(velocidadeA, 100);
+  analogWrite(velocidadeA, 150);
 
   // Motor 2
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
-  analogWrite(velocidadeB, 100);
+  analogWrite(velocidadeB, 150);
 
   // Motor 3
   digitalWrite(IN5, HIGH);
   digitalWrite(IN6, LOW);
-  analogWrite(velocidadeC, 100);
+  analogWrite(velocidadeC, 150);
 
   // Motor 4
   digitalWrite(IN7, HIGH);
   digitalWrite(IN8, LOW);
-  analogWrite(velocidadeD, 100);
+  analogWrite(velocidadeD, 150);
+}
+
+void direitaF() {
+  // Motor 1
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(velocidadeA, 150);
+
+  // Motor 2
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(velocidadeB, 50);
+
+  // Motor 3
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, LOW);
+  analogWrite(velocidadeC, 150);
+
+  // Motor 4
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, LOW);
+  analogWrite(velocidadeD, 50);
 }
 
 void direitaB() {
   // Motor 1
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
-  analogWrite(velocidadeA, 100);
+  analogWrite(velocidadeA, 120);
 
   // Motor 2
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
-  analogWrite(velocidadeB, 100);
+  analogWrite(velocidadeB, 120);
 
   // Motor 3
-  digitalWrite(IN5, LOW);
-  digitalWrite(IN6, HIGH);
-  analogWrite(velocidadeC, 100);
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, LOW);
+  analogWrite(velocidadeC, 120);
 
   // Motor 4
-  digitalWrite(IN7, HIGH);
-  digitalWrite(IN8, LOW);
-  analogWrite(velocidadeD, 100);
-}
-
- void direitaF() {
-  // Motor 1
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  analogWrite(velocidadeA, 100);
-
-  // Motor 2
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
-  analogWrite(velocidadeB, 80);
-
-  // Motor 3
-  digitalWrite(IN5, LOW);
-  digitalWrite(IN6, HIGH);
-  analogWrite(velocidadeC, 80);
-
-  // Motor 4
-  digitalWrite(IN7, HIGH);
-  digitalWrite(IN8, LOW);
-  analogWrite(velocidadeD, 100);
+  digitalWrite(IN7, LOW);
+  digitalWrite(IN8, HIGH);
+  analogWrite(velocidadeD, 120);
 }
 
 void esquerdaB() {
   // Motor 1
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
-  analogWrite(velocidadeA, 100);
+  analogWrite(velocidadeA, 120);
 
   // Motor 2
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
-  analogWrite(velocidadeB, 100);
+  analogWrite(velocidadeB, 120);
 
   // Motor 3
-  digitalWrite(IN5, HIGH);
-  digitalWrite(IN6, LOW);
-  analogWrite(velocidadeC, 100);
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, HIGH);
+  analogWrite(velocidadeC, 120);
 
   // Motor 4
-  digitalWrite(IN7, LOW);
-  digitalWrite(IN8, HIGH);
-  analogWrite(velocidadeD, 100);
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, LOW);
+  analogWrite(velocidadeD, 120);
 }
 
 void esquerdaF() {
   // Motor 1
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
-  analogWrite(velocidadeA, 80);
+  analogWrite(velocidadeA, 50);
 
   // Motor 2
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
-  analogWrite(velocidadeB, 100);
+  analogWrite(velocidadeB, 150);
 
   // Motor 3
-  digitalWrite(IN5, HIGH);
-  digitalWrite(IN6, LOW);
-  analogWrite(velocidadeC, 100);
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, HIGH);
+  analogWrite(velocidadeC, 50);
 
   // Motor 4
-  digitalWrite(IN7, LOW);
-  digitalWrite(IN8, HIGH);
-  analogWrite(velocidadeD, 80);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(velocidadeD, 150);
 }
 
 void parar() {
@@ -219,10 +218,10 @@ void loop() {
       frente();
     } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda > referencia) {
       Serial.println("ESQUERDAF");
-      esquerdaF();
-    } else if (sinalDireita > referencia && sinalCentro < referencia && sinalEsquerda < referencia){
+      esquerdaB();
+    } else if (sinalDireita > referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
       Serial.println("DIREITAF");
-      direitaF();
+      direitaB();
     } else if (sinalDireita < referencia && sinalCentro > referencia) {
       Serial.println("DIREITAB");
       direitaB();
@@ -230,7 +229,7 @@ void loop() {
       Serial.println("ESQUERDAB");
       esquerdaB();
     }
-      else {
+    else {
       Serial.println("PARAR");
       parar();
     }
