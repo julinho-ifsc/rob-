@@ -6,10 +6,10 @@
 
 #define DEBUG true
 
-#define SSID "julinho"
-#define PASSWORD "123456789"
+char ssid[] = "julinho";
+char pass[] = "123456789";
 
-IPAddress server(191,36,8,24); 
+IPAddress server(191,36,8,4); 
 int PORT = 1883;
 
 WiFiEspClient espClient;
@@ -21,6 +21,10 @@ constexpr uint8_t SS_PIN = 53;
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 char message_buff[10];
+
+long lastReconnectAttempt = 0;
+
+int status = WL_IDLE_STATUS;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -43,6 +47,8 @@ void setup() {
   Serial1.begin(115200);
   SPI.begin();
 
+  Serial.println("Hello World");
+
   Serial.println("Configurando RFID");
   mfrc522.PCD_Init();
   Serial.println("Feito");
@@ -54,8 +60,14 @@ void setup() {
     while (true);
   }
 
-  WiFi.begin(SSID, PASSWORD);
+  while (status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.println(ssid);
 
+    status = WiFi.begin(ssid, pass);
+
+//    delay(10000);
+  }
 
   Serial.println("You're connected to the network");
 
@@ -63,53 +75,45 @@ void setup() {
   mqttClient.setCallback(callback);
 }
 
-
-void reconnect() {
-  while (!mqttClient.connected()) {
-    Serial.println("Attempting MQTT connection...");
-
-    // Attempt to connect, just a name to identify the client
-    if (mqttClient.connect("arduinoClient")) {
-      Serial.println("connected");
-      mqttClient.publish("julinho/enable","1");
-      mqttClient.publish("julinho/sos","0");
-      mqttClient.subscribe("julinho/rota", 1);
-    } else {
-      Serial.print("failed, rc = ");
-      Serial.print(mqttClient.state());
-      Serial.println(" try again in 5 seconds");
-
-      delay(5000);
-    }
+boolean reconnect() {
+  if (mqttClient.connect("arduinoClient")) {
+    Serial.println("connected");
+    mqttClient.publish("julinho/enable","1");
+//    mqttClient.publish("julinho/sos","0");
+    mqttClient.subscribe("julinho/rota");
   }
+  return mqttClient.connected();
 }
 
-void loop() {
-  // NÃO APAGAR - Delay para não obstruir serial
-  delay(100);
-
+void loop() { 
   if (!mqttClient.connected()) {
-    reconnect();
-  }
+    long now = millis();
+    if (now - lastReconnectAttempt > 5000) {
+      lastReconnectAttempt = now;
+      if (reconnect()) {
+        lastReconnectAttempt = 0;
+      }
+    }
+  } else {
+    if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
+      mqttClient.loop();
+      return;
+    }
 
-  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
-    mqttClient.loop();
-    return;
-  }
-
-  String rfidUid = "";
-  for (byte i = 0; i < mfrc522.uid.size; i++) {
-    rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
-    rfidUid += String(mfrc522.uid.uidByte[i], HEX);
-  }
+    String rfidUid = "";
+    for (byte i = 0; i < mfrc522.uid.size; i++) {
+      rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
+      rfidUid += String(mfrc522.uid.uidByte[i], HEX);
+    }
+    
+    if (rfidUid == message_buff) {
+      mqttClient.loop();
+      return;    
+    }
   
-  if (rfidUid == message_buff) {
-    mqttClient.loop();
-    return;    
+    rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
+    mqttClient.publish("julinho/check", message_buff);
+    Serial.println("Message sended: ");
+    Serial.println(message_buff);
   }
-
-  rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
-  mqttClient.publish("julinho/check", message_buff);
-  Serial.println("Message sended: ");
-  Serial.println(message_buff);
 }
