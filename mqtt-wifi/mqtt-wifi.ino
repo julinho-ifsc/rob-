@@ -1,115 +1,87 @@
+/*
+Código baseado em:
+- https://github.com/knolleary/pubsubclient/blob/master/examples/mqtt_esp8266/mqtt_esp8266.ino
+- https://github.com/knolleary/pubsubclient/blob/master/examples/mqtt_reconnect_nonblocking/mqtt_reconnect_nonblocking.ino
+- https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/ESP8266WiFi.h
+*/
+
 #include <SPI.h>
-#include <WiFiEsp.h>
-#include <WiFiEspClient.h>
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-#include <MFRC522.h>
 
-#define DEBUG true
+const char* ssid = "julinho";
+const char* password = "123456789";
+const char* mqtt_server = "nuvem2.sj.ifsc.edu.br";
 
-#define SSID "julinho"
-#define PASSWORD "123456789"
+WiFiClient espClient;
+PubSubClient client(espClient);
 
-IPAddress server(191,36,8,24); 
-int PORT = 1883;
+void setup_wifi() {
+  delay(10);
+  Serial.println();
+  Serial.print("Connectando a ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  randomSeed(micros());
+  Serial.println("");
+  Serial.println("WiFi conectado!");
+  Serial.println("Endereço IP: ");
+  Serial.println(WiFi.localIP());
+}
 
-WiFiEspClient espClient;
-PubSubClient mqttClient(espClient);
-
-constexpr uint8_t RST_PIN = 5;
-constexpr uint8_t SS_PIN = 53;
-
-MFRC522 mfrc522(SS_PIN, RST_PIN);
-
-char message_buff[10];
+boolean reconnect() {
+  if (client.connect("julinho")) {
+    Serial.println("conectado ao broker!");
+    client.publish("arduino/check","1");
+    client.subscribe("arduino/rota");
+  }
+  return client.connected();
+}
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
+  Serial.print("Messagem recebida [");
   Serial.print(topic);
-  Serial.print("]: ");
-  Serial.println();
-
-  Serial.print("Length: ");
-  Serial.print(length);
-  Serial.println();
-  
+  Serial.print("] ");
   for (int i = 0; i < length; i++) {
-    Serial.print((char) payload[i]);
+    Serial.print((char)payload[i]);
   }
   Serial.println();
 }
+
+// Timestamp da última (re)conexão WiFi
+long lastReconnectAttempt = 0;
 
 void setup() {
-  Serial.begin(9600);
-  Serial1.begin(115200);
-  SPI.begin();
-
-  Serial.println("Configurando RFID");
-  mfrc522.PCD_Init();
-  Serial.println("Feito");
-
-  WiFi.init(&Serial1);
-
-  if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WiFi shield not present");
-    while (true);
-  }
-
-  WiFi.begin(SSID, PASSWORD);
-
-
-  Serial.println("You're connected to the network");
-
-  mqttClient.setServer(server, PORT);
-  mqttClient.setCallback(callback);
-}
-
-
-void reconnect() {
-  while (!mqttClient.connected()) {
-    Serial.println("Attempting MQTT connection...");
-
-    // Attempt to connect, just a name to identify the client
-    if (mqttClient.connect("arduinoClient")) {
-      Serial.println("connected");
-      mqttClient.publish("julinho/enable","1");
-      mqttClient.publish("julinho/sos","0");
-      mqttClient.subscribe("julinho/rota", 1);
-    } else {
-      Serial.print("failed, rc = ");
-      Serial.print(mqttClient.state());
-      Serial.println(" try again in 5 seconds");
-
-      delay(5000);
-    }
-  }
+  Serial.begin(115200);
+  setup_wifi();
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+  lastReconnectAttempt = 0;
 }
 
 void loop() {
-  // NÃO APAGAR - Delay para não obstruir serial
-  delay(100);
-
-  if (!mqttClient.connected()) {
-    reconnect();
+  // WiFi?
+  if (WiFi.status() != WL_CONNECTED) {
+    setup_wifi();
+  } else {
+    // MQTT?
+    if (!client.connected()) {
+      long now = millis();
+      // Intervalo de 5s para reconexão WiFi
+      if (now - lastReconnectAttempt > 5000) {
+        lastReconnectAttempt = now;
+        if (reconnect()) {
+          lastReconnectAttempt = 0;
+        }
+      }
+    } else {
+      // WiFi + MQTT
+      client.loop();
+    }
   }
 
-  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
-    mqttClient.loop();
-    return;
-  }
-
-  String rfidUid = "";
-  for (byte i = 0; i < mfrc522.uid.size; i++) {
-    rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
-    rfidUid += String(mfrc522.uid.uidByte[i], HEX);
-  }
-  
-  if (rfidUid == message_buff) {
-    mqttClient.loop();
-    return;    
-  }
-
-  rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
-  mqttClient.publish("julinho/check", message_buff);
-  Serial.println("Message sended: ");
-  Serial.println(message_buff);
 }
