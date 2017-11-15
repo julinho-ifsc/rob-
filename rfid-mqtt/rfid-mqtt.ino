@@ -8,11 +8,11 @@
 #define DEBUG true
 
 // WIFI
-#define SSID "Gabriel"
-#define PASSWORD "bi91654704"
+#define SSID "julinho"
+#define PASSWORD "123456789"
 
 // MQTT
-IPAddress server(191,36,8,24); //Servidor
+IPAddress server(191, 36, 8, 24); //Servidor
 int PORT = 1883;
 
 //RFID
@@ -30,8 +30,15 @@ PubSubClient mqttClient(espClient);
 
 //Variáveis auxiliares MQTT
 char message_buff[100];
+const char* topico = "julinho/rota";
 
-void setup(){
+//TESTE CORTE DE MENSAGENS
+char ROTA = "";
+//String ROTA = "";
+//String serialResponse = "";
+//
+
+void setup() {
   Serial.begin(9600);
   Serial1.begin(115200);
   SPI.begin();
@@ -42,11 +49,11 @@ void setup(){
   Serial.println("Feito");
 
   Serial.println("- Configurando modulo...");
-  sendData("AT+CWMODE=1\r\n",1000,DEBUG); // modo de operação STA
+  sendData("AT+CWMODE=1\r\n", 1000, DEBUG); // modo de operação STA
   Serial.println("- Resetando modulo...");
-  sendData("AT+RST\r\n",1000,DEBUG); // resetar módulo
+  sendData("AT+RST\r\n", 1000, DEBUG); // resetar módulo
   Serial.println("- Conectando no roteador");
-  sendData("AT+CWJAP=\"Gabriel\",\"bi91654704\"\r\n", 5000, DEBUG); // conectar na rede wifi
+  sendData("AT+CWJAP=\"julinho\",\"123456789\"\r\n", 5000, DEBUG); // conectar na rede wifi
 
   // initialize ESP module
   WiFi.init(&Serial1);
@@ -72,49 +79,40 @@ void setup(){
   //connect to MQTT server
   mqttClient.setServer(server, PORT);
   mqttClient.setCallback(callback);
+
+//TESTE CORTE DE MENSAGENS
+//   char *p = ROTA;
+//   char *str;
+//   while ((str = strtok_r(p, ";", &p)) != NULL) // delimiter is the semicolon
+//   Serial.println(str);
+//
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  int i = 0;
 
-  if (strcmp(topic, "julinho/rota") == 0){
-    for (int i = 0; i < length; i++) {
-      Serial.print((char) payload[i]);
-    }
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("]: ");
+  Serial.println();
+  for (int i = 0; i < length; i++) {
+    ROTA = ((char)payload[i]);
+    Serial.print(ROTA);
 
-    Serial.print(" - ");
-    Serial.println("ROTA = ");
-    Serial.println((char*)payload);
   }
-
-  if (strcmp(topic, "julinho/dev")==0){
-    String msg = "";
-    Serial.print("Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
-    for (int i=0;i<length;i++) {
-      Serial.print((char)payload[i]);
-      msg += (char)payload[i];
-      message_buff[i] = payload[i];
-    }
-    message_buff[i] = '\0';
-    String msgString = String(message_buff);
-    Serial.println("Payload: " + msgString);
-  }
+  Serial.println();
 }
-
-String sendData(const char* command, const int timeout, boolean debug){
+String sendData(const char* command, const int timeout, boolean debug) {
   String response = "";
   Serial1.print(command); // send the read character to the esp8266
   long int time = millis();
-  while( (time+timeout) > millis()){
-    while(Serial1.available()){
+  while ( (time + timeout) > millis()) {
+    while (Serial1.available()) {
       // The esp has data so display its output to the serial window
       char c = Serial1.read(); // read the next character.
-      response+=c;
+      response += c;
     }
   }
-  if(debug){
+  if (debug) {
     Serial.println(response.c_str());
   }
   return response;
@@ -127,14 +125,11 @@ void reconnect() {
     // Attempt to connect, just a name to identify the client
     if (mqttClient.connect("arduinoClient")) {
       Serial.println("connected");
-      mqttClient.publish("julinho/enable","1");
-      mqttClient.publish("julinho/sos","0");
-      mqttClient.subscribe("julinho/#");
-      //mqttClient.subscribe("julinho/dev");
-//        mqttClient.subscribe("julinho/#");
-
-          }
-      else {
+      mqttClient.publish("julinho/enable", "1");
+      mqttClient.publish("julinho/sos", "0");
+      mqttClient.subscribe(topico, 1);
+    }
+    else {
       Serial.print("failed, rc = ");
       Serial.print(mqttClient.state());
       Serial.println(" try again in 5 seconds");
@@ -145,14 +140,20 @@ void reconnect() {
 }
 
 void loop() {
+  //TESTE CORTE DE MENSAGENS
+//  if ( Serial.available()) {
+//     serialResponse = Serial.readStringUntil('\r\n');
+//     Serial.println(serialResponse);
+//     }
+//
 
-      //  Procura tags;
-    if ( ! mfrc522.PICC_IsNewCardPresent()) {
-    }
+  //  Procura tags;
+  if ( ! mfrc522.PICC_IsNewCardPresent()) {
+     }
 
-    //  Lê a tag
-    if ( ! mfrc522.PICC_ReadCardSerial());
-    String rfidUid = "";
+  //  Lê a tag
+  if ( ! mfrc522.PICC_ReadCardSerial());
+  String rfidUid = "";
   for (byte i = 0; i < mfrc522.uid.size; i++) {
     rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
     rfidUid += String(mfrc522.uid.uidByte[i], HEX);
@@ -161,13 +162,19 @@ void loop() {
   // put your main code here, to run repeatedly:
   if (!mqttClient.connected()) {
     reconnect();
-  } else {
-    rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
-    mqttClient.publish("julinho/check", message_buff);
-    Serial.print("Message sended: ");
-    Serial.println(message_buff);
+  }
+  else {
+    if (rfidUid == message_buff) {
+      mqttClient.loop();
+      return;
+    }
+    else {
+      rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
+      mqttClient.publish("julinho/check", message_buff);
+      Serial.println("Message sended: ");
+      Serial.println(message_buff);
+    }
+
   }
 
-  mqttClient.loop();
-  return;
 }
