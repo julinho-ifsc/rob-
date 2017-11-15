@@ -1,7 +1,6 @@
 #include <NewPing.h>
 
-#define NO_ECHO 5000
-NewPing sonar(23, 22, 150);
+NewPing sonar(23, 22);
 
 #define BUZZER 24
 #define sensorPE A15
@@ -14,9 +13,11 @@ int referencia = 900;
 int sinalDireita = 0;
 int sinalCentro = 0;
 int sinalEsquerda = 0;
+int sinalPEsquerda = 0;
+int sinalPDireita = 0;
 
 //motor 1
-int velocidadeA = 7;
+int velocidadeA = 7; //motor frente esquerda
 int IN1 = 35 ;
 int IN2 = 36 ;
 
@@ -37,6 +38,7 @@ int IN8 = 12 ;
 
 //variavel auxiliar
 int velocidade = 0;
+int vel = 105;
 
 void setup() {
   Serial.begin(9600);
@@ -55,7 +57,7 @@ void setup() {
   pinMode(velocidadeD, OUTPUT);
 }
 
-void motor1(int velocity, int rotation1, int rotation2) {
+void motor1(int velocity, int rotation1, int rotation2) { //motor1(100,1,0)
   digitalWrite(IN1, rotation1);
   digitalWrite(IN2, rotation2);
   analogWrite(velocidadeA, velocity);
@@ -80,38 +82,24 @@ void motor4(int velocity, int rotation1, int rotation2) {
 }
 
 void frente() {
-  motor1(70, HIGH, LOW);
-  motor2(70, HIGH, LOW);
-  motor3(70, HIGH, LOW);
-  motor4(70, HIGH, LOW);
+  motor1(vel, HIGH, LOW);
+  motor2(vel, HIGH, LOW);
+  motor3(vel, HIGH, LOW);
+  motor4(vel, HIGH, LOW);
 }
 
-void direitaF() {
-  motor1(70, HIGH, LOW);
-  motor2(50, HIGH, LOW);
-  motor3(70, HIGH, LOW);
-  motor4(50, HIGH, LOW);
+void direita() {
+  motor1(vel*0.3+vel, HIGH, LOW);
+  motor2(vel, LOW, HIGH);
+  motor3(vel*0.3+vel, HIGH, LOW);
+  motor4(vel, LOW, HIGH);
 }
 
-void direitaB() {
-  motor1(70, HIGH, LOW);
-  motor2(70, LOW, HIGH);
-  motor3(70, HIGH, LOW);
-  motor4(70, LOW, HIGH);
-}
-
-void esquerdaB() {
-  motor1(70, LOW, HIGH);
-  motor2(70, HIGH, LOW);
-  motor3(70, LOW, HIGH);
-  motor4(70, HIGH, LOW);
-}
-
-void esquerdaF() {
-  motor1(50, LOW, HIGH);
-  motor2(70, HIGH, LOW);
-  motor3(50, LOW, HIGH);
-  motor4(40, HIGH, LOW);
+void esquerda() {
+  motor1(vel, LOW, HIGH);
+  motor2(vel*0.3+vel, HIGH, LOW);
+  motor3(vel, LOW, HIGH);
+  motor4(vel*0.3+vel, HIGH, LOW);
 }
 
 void parar() {
@@ -134,60 +122,37 @@ void parar() {
 
 void loop() {
   float cm = sonar.ping_cm();  
-  Serial.print("Distancia: ");
-  Serial.println(cm);
-
   sinalEsquerda = analogRead(sensorE);
   sinalCentro = analogRead(sensorC);
   sinalDireita = analogRead(sensorD);
-
-  Serial.print("Nivel Esquerdo : ");
-  Serial.println(sinalEsquerda);
-  Serial.print("Nível Centro: ");
-  Serial.println(sinalCentro);
-  Serial.print("Nivel Direito : ");
-  Serial.println(sinalDireita);
-  Serial.println("");
-  Serial.println(NO_ECHO);
-  Serial.println(cm);
-
-  if (cm == NO_ECHO) {
-    
+  sinalPEsquerda = analogRead(sensorPE);
+  sinalPDireita = analogRead(sensorPD);
     
     if (cm < 15) {
-      Serial.println("PARAR");
-      parar();
+      parar();  
     } else {
-      Serial.print("ANDAR P/ ");
-  
       if (sinalCentro < referencia ) {
-        Serial.println("FRENTE");
         frente();
       } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
-        Serial.println("FRENTE");
         frente();
       } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda > referencia) {
-        Serial.println("ESQUERDAF");
-        esquerdaF();
+        direita();
       } else if (sinalDireita > referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
-        Serial.println("DIREITAF");
-        direitaF();
+        esquerda();
       } else if (sinalDireita < referencia && sinalCentro > referencia) {
-        Serial.println("DIREITAB");
-        direitaB();
+        direita();
       } else if (sinalEsquerda < referencia && sinalCentro > referencia) {
-        Serial.println("ESQUERDAB");
-        esquerdaB();
-      }
-      else {
-        Serial.println("PARAR");
+        esquerda();
+      } else if (sinalPEsquerda < referencia && sinalEsquerda < referencia){
+        esquerda();
+      } else if (sinalPEsquerda < referencia) {
+        esquerda();
+      } else if (sinalPDireita < referencia && sinalDireita < referencia){
+        direita();
+      } else if (sinalPDireita < referencia) {
+        direita();        
+      } else {
         parar();
-      }
+      }   
     }
-    Serial.println("");
-  }
-  else {
-        Serial.println("PARAR");
-        parar();
-  }
 }  
