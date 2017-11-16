@@ -9,7 +9,7 @@ NewPing sonar(23, 22);
 #define sensorD A12
 #define sensorPD A11
 
-int referencia = 900;
+int referencia = 200;
 int sinalDireita = 0;
 int sinalCentro = 0;
 int sinalEsquerda = 0;
@@ -38,7 +38,7 @@ int IN8 = 12 ;
 
 //variavel auxiliar
 int velocidade = 0;
-int vel = 105;
+int vel = 75;
 
 void setup() {
   Serial.begin(9600);
@@ -95,11 +95,25 @@ void direita() {
   motor4(vel, LOW, HIGH);
 }
 
+void direitaf() {
+  motor1(vel, HIGH, LOW);
+  motor2(0.75*vel, LOW, HIGH);
+  motor3(vel, HIGH, LOW);
+  motor4(0.75*vel, LOW, HIGH);
+}
+
 void esquerda() {
   motor1(vel, LOW, HIGH);
   motor2(vel*0.3+vel, HIGH, LOW);
   motor3(vel, LOW, HIGH);
   motor4(vel*0.3+vel, HIGH, LOW);
+}
+
+void esquerdaf() {
+  motor1(vel*0.75, LOW, HIGH);
+  motor2(vel, HIGH, LOW);
+  motor3(vel*0.75, LOW, HIGH);
+  motor4(vel, HIGH, LOW);
 }
 
 void parar() {
@@ -127,6 +141,19 @@ void loop() {
   sinalDireita = analogRead(sensorD);
   sinalPEsquerda = analogRead(sensorPE);
   sinalPDireita = analogRead(sensorPD);
+  Serial.print("Distancia: ");
+  Serial.println(cm);
+  Serial.print("Nivel Ponta Esquerda: ");
+  Serial.println(sinalPEsquerda);
+  Serial.print("Nivel Esquerda: ");
+  Serial.println(sinalEsquerda);
+  Serial.print("Nivel Centro: ");
+  Serial.println(sinalCentro);
+  Serial.print("Nivel Direita: ");
+  Serial.println(sinalDireita);
+  Serial.print("Nivel Ponta Direita: ");
+  Serial.println(sinalPDireita);
+  Serial.println("");
     
     if (cm < 15) {
       parar();  
@@ -136,9 +163,9 @@ void loop() {
       } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
         frente();
       } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda > referencia) {
-        direita();
+        direitaf();
       } else if (sinalDireita > referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
-        esquerda();
+        esquerdaf();
       } else if (sinalDireita < referencia && sinalCentro > referencia) {
         direita();
       } else if (sinalEsquerda < referencia && sinalCentro > referencia) {
