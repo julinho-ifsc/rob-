@@ -35,10 +35,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Length: ");
   Serial.print(length);
   Serial.println();
-  
+
   for (int i = 0; i < length; i++) {
     Serial.print((char) payload[i]);
   }
+
   Serial.println();
 }
 
@@ -53,6 +54,12 @@ void setup() {
   mfrc522.PCD_Init();
   Serial.println("Feito");
 
+  Serial.println("- Configurando modulo...");
+  sendData("AT+CWMODE=1\r\n", 1000, DEBUG); // modo de operação STA
+  Serial.println("- Resetando modulo...");
+  sendData("AT+RST\r\n", 1000, DEBUG); // resetar módulo
+  Serial.println("- Conectando no roteador");
+  sendData("AT+CWJAP=\"julinho\",\"123456789\"\r\n", 5000, DEBUG); // conectar na rede wifi
   WiFi.init(&Serial1);
 
   if (WiFi.status() == WL_NO_SHIELD) {
@@ -65,8 +72,6 @@ void setup() {
     Serial.println(ssid);
 
     status = WiFi.begin(ssid, pass);
-
-//    delay(10000);
   }
 
   Serial.println("You're connected to the network");
@@ -79,10 +84,25 @@ boolean reconnect() {
   if (mqttClient.connect("arduinoClient")) {
     Serial.println("connected");
     mqttClient.publish("julinho/enable","1");
-//    mqttClient.publish("julinho/sos","0");
+    mqttClient.publish("julinho/sos","0");
     mqttClient.subscribe("julinho/rota");
   }
   return mqttClient.connected();
+}
+
+String sendData(const char* command, const int timeout, boolean debug) {
+  String response = "";
+  Serial1.print(command); // send the read character to the esp8266
+  long int time = millis();
+  
+  while ( (time + timeout) > millis()) {
+    while (Serial1.available()) {
+      // The esp has data so display its output to the serial window
+      char c = Serial1.read(); // read the next character.
+      response += c;
+    }
+  }
+  return response;
 }
 
 void loop() { 
