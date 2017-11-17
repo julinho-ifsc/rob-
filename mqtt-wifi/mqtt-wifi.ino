@@ -9,7 +9,10 @@
 char ssid[] = "julinho";
 char pass[] = "123456789";
 
-IPAddress server(191,36,8,4); 
+String output = "";
+int rfidIndex = 0;
+
+IPAddress server(191, 36, 8, 4);
 int PORT = 1883;
 
 WiFiEspClient espClient;
@@ -36,19 +39,19 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(length);
   Serial.println();
 
+  rfidIndex = 0;
+  output = "";
   for (int i = 0; i < length; i++) {
-    Serial.print((char) payload[i]);
+    output += (char) payload[i];
   }
-
-  Serial.println();
+  output.toLowerCase();
+  output.trim();
 }
 
 void setup() {
   Serial.begin(9600);
   Serial1.begin(115200);
   SPI.begin();
-
-  Serial.println("Hello World");
 
   Serial.println("Configurando RFID");
   mfrc522.PCD_Init();
@@ -83,8 +86,8 @@ void setup() {
 boolean reconnect() {
   if (mqttClient.connect("arduinoClient")) {
     Serial.println("connected");
-    mqttClient.publish("julinho/enable","1");
-    mqttClient.publish("julinho/sos","0");
+    mqttClient.publish("julinho/enable", "1");
+    mqttClient.publish("julinho/sos", "0");
     mqttClient.subscribe("julinho/rota");
   }
   return mqttClient.connected();
@@ -94,7 +97,7 @@ String sendData(const char* command, const int timeout, boolean debug) {
   String response = "";
   Serial1.print(command); // send the read character to the esp8266
   long int time = millis();
-  
+
   while ( (time + timeout) > millis()) {
     while (Serial1.available()) {
       // The esp has data so display its output to the serial window
@@ -105,7 +108,7 @@ String sendData(const char* command, const int timeout, boolean debug) {
   return response;
 }
 
-void loop() { 
+void loop() {
   if (!mqttClient.connected()) {
     long now = millis();
     if (now - lastReconnectAttempt > 5000) {
@@ -114,26 +117,49 @@ void loop() {
         lastReconnectAttempt = 0;
       }
     }
-  } else {
-    if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
-      mqttClient.loop();
-      return;
-    }
-
-    String rfidUid = "";
-    for (byte i = 0; i < mfrc522.uid.size; i++) {
-      rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
-      rfidUid += String(mfrc522.uid.uidByte[i], HEX);
-    }
-    
-    if (rfidUid == message_buff) {
-      mqttClient.loop();
-      return;    
-    }
-  
-    rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
-    mqttClient.publish("julinho/check", message_buff);
-    Serial.println("Message sended: ");
-    Serial.println(message_buff);
+    return;
   }
+
+  boolean routeExists = output.compareTo("") != 0;
+
+  if (!routeExists) {
+    delay(100);
+    mqttClient.loop();
+    return;
+  }
+
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  String rfidUid = "";
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
+    rfidUid += String(mfrc522.uid.uidByte[i], HEX);
+  }
+
+  rfidUid.toLowerCase();
+  rfidUid.trim();
+  
+  if (rfidUid == message_buff) {
+    return;
+  }
+
+  Serial.println(output);
+  Serial.println(rfidUid);
+  int incomingRfidIndex = output.indexOf(rfidUid);
+
+  Serial.println(incomingRfidIndex);
+  if (incomingRfidIndex == rfidIndex) {
+    String currentDirection = output.substring(rfidIndex + 9, rfidIndex + 10);
+    Serial.println(currentDirection);
+    rfidIndex += 11;
+  }
+  
+  Serial.println(rfidIndex);
+
+  rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
+  mqttClient.publish("julinho/check", message_buff);
+  Serial.println("Message sended: ");
+  Serial.println(message_buff);
 }
