@@ -16,6 +16,7 @@ int sinalEsquerda = 0;
 int sinalPEsquerda = 0;
 int sinalPDireita = 0;
 
+// MOTORES ÍMPARES = ESQUERDA; PARES = DIREITA
 //motor 1
 int velocidadeA = 7; //motor frente esquerda
 int IN1 = 35 ;
