@@ -89,31 +89,59 @@ void frente() {
   motor4(vel, HIGH, LOW);
 }
 
-void direita() {
-  motor1(vel*0.3+vel, HIGH, LOW);
+void direita1() {
+  motor1(vel, HIGH, LOW);
+  motor2(vel*0.9, HIGH, LOW);
+  motor3(vel, HIGH, LOW);
+  motor4(vel*0.9, HIGH, LOW);
+}
+
+void direita2() {
+  motor1(vel, HIGH, LOW);
+  motor2(vel*0.7, HIGH, LOW);
+  motor3(vel, HIGH, LOW);
+  motor4(vel*0.7, HIGH, LOW);
+}
+
+void direita3() {
+  motor1(vel, HIGH, LOW);
+  motor2(vel*0.4, HIGH, LOW);
+  motor3(vel, HIGH, LOW);
+  motor4(vel*0.4, HIGH, LOW);
+}
+
+void direita4() {
+  motor1(vel, HIGH, LOW);
   motor2(vel, LOW, HIGH);
-  motor3(vel*0.3+vel, HIGH, LOW);
+  motor3(vel, HIGH, LOW);
   motor4(vel, LOW, HIGH);
 }
 
-void direitaf() {
-  motor1(vel, HIGH, LOW);
-  motor2(0.75*vel, LOW, HIGH);
-  motor3(vel, HIGH, LOW);
-  motor4(0.75*vel, LOW, HIGH);
-}
-
-void esquerda() {
-  motor1(vel, LOW, HIGH);
-  motor2(vel*0.3+vel, HIGH, LOW);
-  motor3(vel, LOW, HIGH);
-  motor4(vel*0.3+vel, HIGH, LOW);
-}
-
-void esquerdaf() {
-  motor1(vel*0.75, LOW, HIGH);
+void esquerda1() {
+  motor1(vel*0.9, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.75, LOW, HIGH);
+  motor3(vel*0.9, HIGH, LOW);
+  motor4(vel, HIGH, LOW);
+}
+
+void esquerda2() {
+  motor1(vel*0.7, HIGH, LOW);
+  motor2(vel, HIGH, LOW);
+  motor3(vel*0.7, HIGH, LOW);
+  motor4(vel, HIGH, LOW);
+}
+
+void esquerda3() {
+  motor1(vel*0.4, HIGH, LOW);
+  motor2(vel, HIGH, LOW);
+  motor3(vel*0.4, HIGH, LOW);
+  motor4(vel, HIGH, LOW);
+}
+
+void esquerda4() {
+  motor1(vel, LOW, HIGH);
+  motor2(vel, HIGH, LOW);
+  motor3(vel, LOW, HIGH);
   motor4(vel, HIGH, LOW);
 }
 
@@ -159,26 +187,36 @@ void loop() {
     if (cm < 15) {
       parar();  
     } else {
-      if (sinalCentro < referencia ) {
+      if (sinalPEsquerda < referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita < referencia) {
         frente();
-      } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
+      } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita < referencia) {
+        direita1();
+      } else if (sinalPEsquerda < referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita > referencia) {
+        esquerda1();
+      } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita < referencia) {
+        direita2();
+      } else if (sinalPEsquerda < referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita > referencia && sinalPDireita > referencia) {
+        esquerda2();
+      } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita > referencia) {
         frente();
-      } else if (sinalDireita < referencia && sinalCentro < referencia && sinalEsquerda > referencia) {
-        direitaf();
-      } else if (sinalDireita > referencia && sinalCentro < referencia && sinalEsquerda < referencia) {
-        esquerdaf();
-      } else if (sinalDireita < referencia && sinalCentro > referencia) {
-        direita();
-      } else if (sinalEsquerda < referencia && sinalCentro > referencia) {
-        esquerda();
-      } else if (sinalPEsquerda < referencia && sinalEsquerda < referencia){
-        esquerda();
-      } else if (sinalPEsquerda < referencia) {
-        esquerda();
-      } else if (sinalPDireita < referencia && sinalDireita < referencia){
-        direita();
-      } else if (sinalPDireita < referencia) {
-        direita();        
+      } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita < referencia && sinalPDireita < referencia) {
+        direita3();
+      } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita > referencia) {
+        esquerda1();
+      } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita > referencia && sinalPDireita > referencia) {
+        direita1();
+      } else if (sinalPEsquerda < referencia && sinalEsquerda < referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita > referencia) {
+        esquerda3();        
+      } else if (sinalPEsquerda < referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita > referencia) {
+        esquerda4();    
+      } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita > referencia) {
+        direita1();    
+      } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro < referencia && sinalDireita > referencia && sinalPDireita > referencia) {
+        frente();    
+      } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita < referencia && sinalPDireita > referencia) {
+        esquerda1();    
+      } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita < referencia) {
+        direita4();    
       } else {
         parar();
       }   
