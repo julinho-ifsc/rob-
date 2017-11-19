@@ -9,6 +9,17 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.ino]
+[*.{php, py, java, html, ts, h, cpp}]
+indent_style = space
+indent_size = 4
+
+[*.{js, json, yml, css, xml, rb, md, cr, ino}]
 indent_style = space
 indent_size = 2
+
+[*.{go, sh}]
+indent_style = tab
+tab_width = 8
+
+[*.md]
+trim_trailing_whitespace = false
