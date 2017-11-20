@@ -39,7 +39,7 @@ int IN8 = 12 ;
 
 //variavel auxiliar
 int velocidade = 0;
-int vel = 70;
+int vel = 100;
 
 void setup() {
   Serial.begin(9600);
@@ -89,25 +89,25 @@ void frente() {
   motor4(vel, HIGH, LOW);
 }
 
-void direita1() {
+void direita3() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.7, LOW, HIGH);
+  motor2(vel*0.4, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.7, LOW, HIGH);
+  motor4(vel*0.4, HIGH, LOW);
 }
 
 void direita2() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.8, LOW, HIGH);
+  motor2(vel*0.6, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*.8, LOW, HIGH);
+  motor4(vel*0.6, HIGH, LOW);
 }
 
-void direita3() {
+void direita1() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.9, LOW, HIGH);
+  motor2(vel*0.8, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.9, LOW, HIGH);
+  motor4(vel*0.8, HIGH, LOW);
 }
 
 void direita4() {
@@ -117,24 +117,24 @@ void direita4() {
   motor4(vel, LOW, HIGH);
 }
 
-void esquerda1() {
-  motor1(vel*0.7, LOW, HIGH);
+void esquerda3() {
+  motor1(vel*0.4, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.7, LOW, HIGH);
+  motor3(vel*0.4, HIGH, LOW);
   motor4(vel, HIGH, LOW);
 }
 
 void esquerda2() {
-  motor1(vel*0.8, LOW, HIGH);
+  motor1(vel*0.6, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.8, LOW, HIGH);
+  motor3(vel*0.6, HIGH, LOW);
   motor4(vel, HIGH, LOW);
 }
 
-void esquerda3() {
-  motor1(vel*0.9, LOW, HIGH);
+void esquerda1() {
+  motor1(vel*0.8, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.9, LOW, HIGH);
+  motor3(vel*0.8, HIGH, LOW);
   motor4(vel, HIGH, LOW);
 }
 
@@ -202,19 +202,19 @@ void loop() {
       } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita < referencia && sinalPDireita < referencia) { //ok
         direita3();
       } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro < referencia && sinalDireita < referencia && sinalPDireita > referencia) { //ok
-        direita1();
+        direita2();
       } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro < referencia && sinalDireita > referencia && sinalPDireita > referencia) { //ok
-        esquerda1();
+        esquerda2();
       } else if (sinalPEsquerda < referencia && sinalEsquerda < referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita > referencia) { // ok
         esquerda3();        
       } else if (sinalPEsquerda < referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita > referencia) { // ok
         esquerda4();    
       } else if (sinalPEsquerda > referencia && sinalEsquerda < referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita > referencia) { // ok
-        direita1();    
+        esquerda2();    
       } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro < referencia && sinalDireita > referencia && sinalPDireita > referencia) { // ok
         frente();    
       } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita < referencia && sinalPDireita > referencia) { // ok
-        esquerda1();    
+        direita2();    
       } else if (sinalPEsquerda > referencia && sinalEsquerda > referencia && sinalCentro > referencia && sinalDireita > referencia && sinalPDireita < referencia) { // ok
         direita4();    
       } else {
@@ -222,14 +222,3 @@ void loop() {
       }   
     }
 }  
-
-//boolean Cond1(){
-//  if(sinalPEsquerda < referencia){
-//    sinal = true;
-//  } else {
-//    sinal = false;
-//  }
-//  return sinal;
-//}
-//
-//if (!Cond1 && !Cond2 && Cond && test && test)
