@@ -89,11 +89,11 @@ void frente() {
   motor4(vel, HIGH, LOW);
 }
 
-void direita3() {
+void direita1() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.85, HIGH, LOW);
+  motor2(vel*0.45, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.85, HIGH, LOW);
+  motor4(vel*0.45, HIGH, LOW);
 }
 
 void direita2() {
@@ -103,11 +103,11 @@ void direita2() {
   motor4(vel*0.65, HIGH, LOW);
 }
 
-void direita1() {
+void direita3() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.45, HIGH, LOW);
+  motor2(vel*0.85, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.45, HIGH, LOW);
+  motor4(vel*0.85, HIGH, LOW);
 }
 
 void direita4() {
