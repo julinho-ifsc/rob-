@@ -39,11 +39,7 @@ const int IN7 = 11;
 const int IN8 = 12;
 
 //variavel auxiliar
-<<<<<<< HEAD
 const int vel = 65;
-=======
-const int vel = 60;
->>>>>>> a7824610c04b9e9fb92c6fbe465628192550c96d
 
 void setup() {
   Serial.begin(9600);
