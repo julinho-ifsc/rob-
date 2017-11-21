@@ -39,7 +39,7 @@ const int IN7 = 11;
 const int IN8 = 12;
 
 //variavel auxiliar
-const int vel = 65;
+const int vel = 70;
 
 void setup() {
   Serial.begin(9600);
@@ -91,65 +91,65 @@ void frente() {
 
 void direita1() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.45, HIGH, LOW);
+  motor2(vel*0.7, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.45, HIGH, LOW);
+  motor4(vel*0.7, HIGH, LOW);
 }
 
 void direita2() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.65, HIGH, LOW);
+  motor2(vel*0.5, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.65, HIGH, LOW);
+  motor4(vel*0.5, HIGH, LOW);
 }
 
 void direita3() {
-  motor1(vel, HIGH, LOW);
-  motor2(vel*0.85, HIGH, LOW);
-  motor3(vel, HIGH, LOW);
-  motor4(vel*0.85, HIGH, LOW);
+  motor1(vel*0.9, HIGH, LOW);
+  motor2(vel*0.7, HIGH, LOW);
+  motor3(vel*0.9, HIGH, LOW);
+  motor4(vel*0.7, HIGH, LOW);
 }
 
 void direita4() {
-  motor1(vel, HIGH, LOW);
-  motor2(255, HIGH, HIGH);
-  motor3(vel, HIGH, LOW);
-  motor4(255, HIGH, HIGH);
+  motor1(vel*1, HIGH, LOW);
+  motor2(vel*0.6, LOW, HIGH);
+  motor3(vel*1, HIGH, LOW);
+  motor4(vel*0.6, LOW, HIGH);
 }
 
 void esquerda1() {
-  motor1(vel*0.85, HIGH, LOW);
+  motor1(vel*0.7, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.85, HIGH, LOW);
+  motor3(vel*0.7, HIGH, LOW);
   motor4(vel, HIGH, LOW);
 }
 
 void esquerda2() {
-  motor1(vel*0.65, HIGH, LOW);
+  motor1(vel*0.5, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.65, HIGH, LOW);
+  motor3(vel*0.5, HIGH, LOW);
   motor4(vel, HIGH, LOW);
 }
 
 void esquerda3() {
-  motor1(vel*0.45, HIGH, LOW);
-  motor2(vel, HIGH, LOW);
-  motor3(vel*0.45, HIGH, LOW);
-  motor4(vel, HIGH, LOW);
+  motor1(vel*0.7, HIGH, LOW);
+  motor2(vel*0.9, HIGH, LOW);
+  motor3(vel*0.7, HIGH, LOW);
+  motor4(vel*0.9, HIGH, LOW);
 }
 
 void esquerda4() {
-  motor1(255, HIGH, HIGH);
-  motor2(vel, HIGH, LOW);
-  motor3(255, HIGH, HIGH);
-  motor4(vel, HIGH, LOW);
+  motor1(vel*0.6, LOW, HIGH);
+  motor2(vel*1, HIGH, LOW);
+  motor3(vel*0.6, LOW, HIGH);
+  motor4(vel*1, HIGH, LOW);
 }
 
 void parar() {
-  motor1(255, HIGH, HIGH);
-  motor2(255, HIGH, HIGH);
-  motor3(255, HIGH, HIGH);
-  motor4(255, HIGH, HIGH);
+  motor1(vel, HIGH, HIGH);
+  motor2(vel, HIGH, HIGH);
+  motor3(vel, HIGH, HIGH);
+  motor4(vel, HIGH, HIGH);
 }
 
 void loop() {
@@ -199,19 +199,19 @@ void loop() {
     } else if (!sinalPEsquerdaIsActive && !sinalEsquerdaIsActive && !sinalCentroIsActive && sinalDireitaIsActive && sinalPDireitaIsActive) { //ok
       direita2();
     } else if (!sinalPEsquerdaIsActive && !sinalEsquerdaIsActive && sinalCentroIsActive && sinalDireitaIsActive && !sinalPDireitaIsActive) { //ok
-      direita1();
+      direita2();
     } else if (!sinalPEsquerdaIsActive && sinalEsquerdaIsActive && sinalCentroIsActive && !sinalDireitaIsActive && !sinalPDireitaIsActive) { //ok
-      esquerda1();
+      esquerda2();
     } else if (sinalPEsquerdaIsActive && sinalEsquerdaIsActive && !sinalCentroIsActive && !sinalDireitaIsActive && !sinalPDireitaIsActive) { // ok
       esquerda2();
     } else if (sinalPEsquerdaIsActive && !sinalEsquerdaIsActive && !sinalCentroIsActive && !sinalDireitaIsActive && !sinalPDireitaIsActive) { // ok
       esquerda4();
     } else if (!sinalPEsquerdaIsActive && sinalEsquerdaIsActive && !sinalCentroIsActive && !sinalDireitaIsActive && !sinalPDireitaIsActive) { // ok
-      esquerda1();
+      esquerda2();
     } else if (!sinalPEsquerdaIsActive && !sinalEsquerdaIsActive && sinalCentroIsActive && !sinalDireitaIsActive && !sinalPDireitaIsActive) { // ok
       frente();
     } else if (!sinalPEsquerdaIsActive && !sinalEsquerdaIsActive && !sinalCentroIsActive && sinalDireitaIsActive && !sinalPDireitaIsActive) { // ok
-      direita1();
+      direita2();
     } else if (!sinalPEsquerdaIsActive && !sinalEsquerdaIsActive && !sinalCentroIsActive && !sinalDireitaIsActive && sinalPDireitaIsActive) { // ok
       direita4();
     } else {
