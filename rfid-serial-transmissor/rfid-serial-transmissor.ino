@@ -4,6 +4,8 @@
 constexpr uint8_t RST_PIN = 5;
 constexpr uint8_t SS_PIN = 53;
 
+char message_buff[8];
+
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setup() {
@@ -16,27 +18,21 @@ void setup() {
 }
 
 void loop() {
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
 
-      //  Procura tags;
-    if ( ! mfrc522.PICC_IsNewCardPresent()) { 
-      return;
-    }
-
-    //  Lê a tag
-    if ( ! mfrc522.PICC_ReadCardSerial()){
-      return;
-    }
-    String rfidUid = "";
-   for (byte i = 0; i < mfrc522.uid.size; i++) {
-    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-    Serial.print(mfrc522.uid.uidByte[i], HEX);
-    rfidUid.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
-    rfidUid.concat(String(mfrc522.uid.uidByte[i], HEX));
+  String rfidUid = "";
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
+    rfidUid += String(mfrc522.uid.uidByte[i], HEX);
   }
   rfidUid.toUpperCase();
-  Serial.println(rfidUid);
-  Serial1.println(rfidUid);
-//  delay(10000);
-  return;
+  rfidUid.trim();
+  
+  if (rfidUid != message_buff) {  
+    Serial.println(rfidUid);
+    rfidUid.toCharArray(message_buff, rfidUid.length() + 1);
+    Serial1.print(message_buff);
+  }
 }
-// transmissor
