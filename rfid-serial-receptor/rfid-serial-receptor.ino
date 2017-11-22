@@ -1,7 +1,7 @@
-char str[2];
 int led1 = 10;
 int led2 = 9;
 int led3 = 8;
+
 void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
@@ -10,20 +10,18 @@ void setup() {
   pinMode(led3, OUTPUT);
 }
 
-
-void loop() {
-   int i=0;
-   digitalWrite(led1, LOW);
-
-  if (Serial1.available()){
-    str[i++] = Serial1.read();
-//    if(!str ==" BC 6A 9A 03"){
-//    digitalWrite(led1, HIGH);
-    Serial.print(str);
-// }else{digitalWrite(led3, HIGH);
-// delay(3000);
-// digitalWrite(led3, LOW);
-// return;
-//  }
- }
-} //Receptor
+void loop() {    
+  if (Serial1.available()) {
+    String str = Serial1.readString();
+    
+    Serial.println(str);
+  
+    if (str == "BC6A9A03") {
+      digitalWrite(led3, HIGH);
+      digitalWrite(led1, LOW);
+    } else {
+      digitalWrite(led1, HIGH);
+      digitalWrite(led3, LOW);
+    }
+  }
+}
