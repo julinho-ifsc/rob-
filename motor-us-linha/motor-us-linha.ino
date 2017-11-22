@@ -39,7 +39,7 @@ const int IN7 = 11;
 const int IN8 = 12;
 
 //variavel auxiliar
-const int vel = 70;
+const int vel = 50;
 
 void setup() {
   Serial.begin(9600);
@@ -98,9 +98,9 @@ void direita1() {
 
 void direita2() {
   motor1(vel, HIGH, LOW);
-  motor2(vel*0.5, HIGH, LOW);
+  motor2(vel*0.6, HIGH, LOW);
   motor3(vel, HIGH, LOW);
-  motor4(vel*0.5, HIGH, LOW);
+  motor4(vel*0.6, HIGH, LOW);
 }
 
 void direita3() {
@@ -112,9 +112,9 @@ void direita3() {
 
 void direita4() {
   motor1(vel*1, HIGH, LOW);
-  motor2(vel*0.6, LOW, HIGH);
+  motor2(vel*0.5, LOW, HIGH);
   motor3(vel*1, HIGH, LOW);
-  motor4(vel*0.6, LOW, HIGH);
+  motor4(vel*0.5, LOW, HIGH);
 }
 
 void esquerda1() {
@@ -125,9 +125,9 @@ void esquerda1() {
 }
 
 void esquerda2() {
-  motor1(vel*0.5, HIGH, LOW);
+  motor1(vel*0.6, HIGH, LOW);
   motor2(vel, HIGH, LOW);
-  motor3(vel*0.5, HIGH, LOW);
+  motor3(vel*0.6, HIGH, LOW);
   motor4(vel, HIGH, LOW);
 }
 
@@ -139,9 +139,9 @@ void esquerda3() {
 }
 
 void esquerda4() {
-  motor1(vel*0.6, LOW, HIGH);
+  motor1(vel*0.5, LOW, HIGH);
   motor2(vel*1, HIGH, LOW);
-  motor3(vel*0.6, LOW, HIGH);
+  motor3(vel*0.5, LOW, HIGH);
   motor4(vel*1, HIGH, LOW);
 }
 
@@ -161,19 +161,6 @@ void loop() {
   sinalPEsquerda = analogRead(sensorPE);
   sinalPDireita = analogRead(sensorPD);
 
-  Serial.print("Distancia: ");
-  Serial.println(distance);
-  Serial.print("Nivel Ponta Esquerda: ");
-  Serial.println(sinalPEsquerda);
-  Serial.print("Nivel Esquerda: ");
-  Serial.println(sinalEsquerda);
-  Serial.print("Nivel Centro: ");
-  Serial.println(sinalCentro);
-  Serial.print("Nivel Direita: ");
-  Serial.println(sinalDireita);
-  Serial.print("Nivel Ponta Direita: ");
-  Serial.println(sinalPDireita);
-  Serial.println("");
 
   boolean sinalPEsquerdaIsActive = sinalPEsquerda < referencia;
   boolean sinalEsquerdaIsActive = sinalEsquerda < referencia;
