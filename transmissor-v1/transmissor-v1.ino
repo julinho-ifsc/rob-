@@ -8,7 +8,6 @@ char ssid[] = "julinho";
 char pass[] = "123456789";
 
 String message = "";
-int rfidIndex = 0;
 
 IPAddress server(191, 36, 8, 4);
 int PORT = 1883;
@@ -16,11 +15,12 @@ int PORT = 1883;
 WiFiEspClient espClient;
 PubSubClient mqttClient(espClient);
 
-char message_buff[10];
-
 long lastReconnectAttempt = 0;
 
 int status = WL_IDLE_STATUS;
+
+const int RED_LED = 10;
+const int GREEN_LED = 8;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -32,7 +32,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(length);
   Serial.println();
 
-  rfidIndex = 0;
   message = "";
   for (int i = 0; i < length; i++) {
     message += (char) payload[i];
@@ -43,7 +42,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial1.begin(115200);
   Serial2.begin(9600);
 
   Serial.println("- Configurando modulo...");
@@ -53,17 +52,6 @@ void setup() {
   Serial.println("- Conectando no roteador");
   sendData("AT+CWJAP=\"julinho\",\"123456789\"\r\n", 5000, DEBUG); // conectar na rede wifi
   WiFi.init(&Serial1);
-  
-  if (!mqttClient.connected()) {
-    long now = millis();
-    if (now - lastReconnectAttempt > 5000) {
-      lastReconnectAttempt = now;
-      if (reconnect()) {
-        lastReconnectAttempt = 0;
-      }
-    }
-    return;
-  }
 
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
@@ -81,21 +69,12 @@ void setup() {
 
   mqttClient.setServer(server, PORT);
   mqttClient.setCallback(callback);
+
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
 }
 
 boolean reconnect() {
-  
-  if (!mqttClient.connected()) {
-    long now = millis();
-    if (now - lastReconnectAttempt > 5000) {
-      lastReconnectAttempt = now;
-      if (reconnect()) {
-        lastReconnectAttempt = 0;
-      }
-    }
-    return reconnect();
-  }
-
   if (mqttClient.connect("arduinoClient")) {
     Serial.println("connected");
     mqttClient.publish("julinho/enable", "1");
@@ -121,6 +100,9 @@ String sendData(const char* command, const int timeout, boolean debug) {
 }
 
 void loop() {
+  digitalWrite(RED_LED, HIGH);
+  digitalWrite(GREEN_LED, LOW);
+  
   if (!mqttClient.connected()) {
     long now = millis();
     if (now - lastReconnectAttempt > 5000) {
@@ -139,7 +121,24 @@ void loop() {
     mqttClient.loop();
     return;
   }
+  delay(200);
+  digitalWrite(GREEN_LED, HIGH);
+  digitalWrite(RED_LED, LOW);
+  
   Serial2.print(message);
   Serial.println(message);
   message = "";
+
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+  delay(500);
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(GREEN_LED, HIGH);
+  delay(500);
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+  delay(500);
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(GREEN_LED, HIGH);
+  delay(500);
 }

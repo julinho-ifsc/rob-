@@ -2,8 +2,6 @@
 
 NewPing sonar(23, 22);
 
-const int BUZZER = 24;
-
 const int sensorPE = A15;
 const int sensorE = A14;
 const int sensorC = A13;
@@ -41,12 +39,14 @@ const int IN8 = 12;
 //variavel auxiliar
 const int vel = 50;
 
-String str = "0";
+String message = "0";
+
+const int LED = 13;
 
 void setup() {
   Serial.begin(9600);
   Serial2.begin(9600);
-  pinMode(BUZZER, OUTPUT);
+
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
@@ -59,6 +59,7 @@ void setup() {
   pinMode(velocidadeB, OUTPUT);
   pinMode(velocidadeC, OUTPUT);
   pinMode(velocidadeD, OUTPUT);
+  pinMode(LED, OUTPUT);
 }
 
 void motor1(int velocity, int rotation1, int rotation2) { //motor1(100,1,0)
@@ -164,7 +165,6 @@ void engineLoop() {
   sinalPEsquerda = analogRead(sensorPE);
   sinalPDireita = analogRead(sensorPD);
 
-
   boolean sinalPEsquerdaIsActive = sinalPEsquerda < referencia;
   boolean sinalEsquerdaIsActive = sinalEsquerda < referencia;
   boolean sinalCentroIsActive = sinalCentro < referencia;
@@ -210,15 +210,16 @@ void engineLoop() {
   }
 }
 
-void loop() {    
+void loop() {  
   if (Serial2.available()) {
-    str = Serial2.readString();
-    Serial.println(str);
+    message = Serial2.readString();
   }
   
-  if (str == "1") {
+  if (message == "1") {
+    digitalWrite(LED, HIGH);
     engineLoop();
   } else {
+    digitalWrite(LED, LOW);
     parar();
   }
 }
