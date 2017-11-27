@@ -1,4 +1,6 @@
 //#include <NewPing.h>
+#include <MFRC522.h>
+#include <SPI.h>
 
 //NewPing sonar(23, 22);
 
@@ -39,13 +41,24 @@ const int IN8 = 9;
 //variavel auxiliar
 const int vel = 40;
 
-String message = "0";
+String message = "";
+int rfidIndex = 0;
 
 const int LED = 13;
+
+constexpr uint8_t RST_PIN = 5;
+constexpr uint8_t SS_PIN = 53;
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setup() {
   Serial.begin(9600);
   Serial2.begin(9600);
+  SPI.begin();
+
+  Serial.println("Configurando RFID");
+  mfrc522.PCD_Init();
+  Serial.println("Feito");
 
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
@@ -215,12 +228,37 @@ void loop() {
     message = Serial2.readString();
   }
 
-  if (message == "1") {
-    digitalWrite(LED, HIGH);
-    engineLoop();
-  } else {
-    digitalWrite(LED, LOW);
-    parar();
+  Serial.println(message);
+
+  if (message == "") {
+    return;
   }
+
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  String rfidUid = "";
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
+    rfidUid += String(mfrc522.uid.uidByte[i], HEX);
+  }
+
+  rfidUid.toLowerCase();
+  rfidUid.trim();
+  
+  Serial.println(message);
+  Serial.println(rfidUid);
+  int incomingRfidIndex = message.indexOf(rfidUid);
+
+  Serial.println(incomingRfidIndex);
+  if (incomingRfidIndex == rfidIndex) {
+    String currentDirection = message.substring(rfidIndex + 9, rfidIndex + 10);
+    Serial.println(currentDirection);
+    rfidIndex += 11;
+  }
+  
+  Serial.println(rfidIndex);
 }
+
 
