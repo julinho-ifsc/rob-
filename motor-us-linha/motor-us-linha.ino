@@ -25,14 +25,14 @@ int sinalPDireita = 0;
 
 // MOTORES ÍMPARES = ESQUERDA; PARES = DIREITA
 //motor 1
-const int velocidadeA = 7; //motor frente esquerda
-const int IN1 = 35;
-const int IN2 = 36;
+const int velocidadeA = 6; //motor frente esquerda
+const int IN1 = 48;
+const int IN2 = 49;
 
 //motor 2
-const int velocidadeB = 6;
-const int IN3 = 37;
-const int IN4 = 38;
+const int velocidadeB = 7;
+const int IN3 = 46;
+const int IN4 = 47;
 
 //motor 3
 const int velocidadeC = 8;
@@ -44,7 +44,7 @@ const int velocidadeD = 13;
 const int IN7 = 11;
 const int IN8 = 12;
 
-const int vel = 50;
+const int vel = 60;
 
 char ssid[] = "julinho";
 char pass[] = "123456789";
@@ -151,7 +151,7 @@ String sendData(const char* command, const int timeout, boolean debug) {
     }
   }
   return response;
-}
+
 
 void motor1(int velocity, int rotation1, int rotation2) { //motor1(100,1,0)
   digitalWrite(IN1, rotation1);
@@ -314,7 +314,7 @@ void loop() {
   }
 
   delay(100);
-  mqttClient.loop();
+  mqttCli\ent.loop();
 
   if (shouldWalk) {
     loopEngine();
