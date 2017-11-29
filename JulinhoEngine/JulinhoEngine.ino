@@ -5,13 +5,7 @@ const EnginePins FRONT_LEFT_ENGINE_PINS = {6, 48, 49};
 const EnginePins FRONT_RIGHT_ENGINE_PINS = {7, 46, 47};
 const EnginePins BACK_LEFT_ENGINE_PINS = {8, 9, 10};
 const EnginePins BACK_RIGHT_ENGINE_PINS = {13, 11, 12};
-const SensorPins SENSOR_PINS = {
-  A15,
-  A14,
-  A13,
-  A12,
-  A11
-};
+const SensorPins SENSOR_PINS = {A15, A14, A13, A12, A11};
 
 EngineControl engineControl(60, 200);
 NewPing sonar(23, 22);
