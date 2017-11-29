@@ -2,6 +2,9 @@
 #include <MFRC522.h>
 #include <SPI.h>
 
+String rfidUid;
+String comp = "batata";
+
 //NewPing sonar(23, 22);
 
 const int sensorPE = A11;
@@ -224,11 +227,12 @@ void engineLoop() {
 }
 
 void loop() {  
+
+String currentDirection;
+
   if (Serial2.available()) {
     message = Serial2.readString();
   }
-
-  Serial.println(message);
 
   if (message == "") {
     return;
@@ -237,8 +241,8 @@ void loop() {
   if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
     return;
   }
-
-  String rfidUid = "";
+  
+  rfidUid = "";
   for (byte i = 0; i < mfrc522.uid.size; i++) {
     rfidUid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
     rfidUid += String(mfrc522.uid.uidByte[i], HEX);
@@ -247,18 +251,25 @@ void loop() {
   rfidUid.toLowerCase();
   rfidUid.trim();
   
+  if (comp == rfidUid){
+    return;
+  }
+  
   Serial.println(message);
   Serial.println(rfidUid);
   int incomingRfidIndex = message.indexOf(rfidUid);
 
   Serial.println(incomingRfidIndex);
   if (incomingRfidIndex == rfidIndex) {
-    String currentDirection = message.substring(rfidIndex + 9, rfidIndex + 10);
+    currentDirection = message.substring(rfidIndex + 9, rfidIndex + 10);
     Serial.println(currentDirection);
     rfidIndex += 11;
   }
-  
+  comp = rfidUid;
   Serial.println(rfidIndex);
+  if (currentDirection == "d"){
+    Serial.println("Direita");
+  }
 }
 
 
