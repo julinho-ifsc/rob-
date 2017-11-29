@@ -1,16 +1,16 @@
 #include <NewPing.h>
 #include <EngineControl.h>
 
-const EnginePins FRONT_LEFT_ENGINE_PINS = {6, 48, 49};
-const EnginePins FRONT_RIGHT_ENGINE_PINS = {7, 46, 47};
-const EnginePins BACK_LEFT_ENGINE_PINS = {8, 9, 10};
-const EnginePins BACK_RIGHT_ENGINE_PINS = {13, 11, 12};
+const EnginePins FRONT_LEFT_ENGINE_PINS = {3, 38, 39};
+const EnginePins FRONT_RIGHT_ENGINE_PINS = {2, 40, 41};
+const EnginePins BACK_LEFT_ENGINE_PINS = {13, 12, 11};
+const EnginePins BACK_RIGHT_ENGINE_PINS = {8, 10, 9};
 const SensorPins SENSOR_PINS = {
-  A15,
-  A14,
-  A13,
+  A11,
   A12,
-  A11
+  A13,
+  A14,
+  A15
 };
 
 EngineControl engineControl(60, 200);
@@ -29,7 +29,7 @@ void setup() {
 void loop() {
   float distance = sonar.ping_cm();
 
-  if (distance < 15 && distance > 0) {
+  if (distance < 15 & distance > 0) {
     engineControl.parar();
   } else {
     engineControl.loop();

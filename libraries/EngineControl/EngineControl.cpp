@@ -8,7 +8,7 @@ EngineControl::EngineControl(int velocity, int reference) {
 
 void EngineControl::motor1(int velocity, int rotation1, int rotation2) {
   digitalWrite(_frontLeftPins.rotation1, rotation1);
-  digitalWrite(_frontLeftPins.rotation2, rotation1);
+  digitalWrite(_frontLeftPins.rotation2, rotation2);
   analogWrite(_frontLeftPins.velocity, velocity);
 }
 
@@ -94,7 +94,6 @@ void EngineControl::esquerda4() {
 }
 
 void EngineControl::parar() {
-  Serial.println("parar")
   motor1(_velocidade, HIGH, HIGH);
   motor2(_velocidade, HIGH, HIGH);
   motor3(_velocidade, HIGH, HIGH);
@@ -102,8 +101,6 @@ void EngineControl::parar() {
 }
 
 void EngineControl::loop() {
-  Serial.println("loop");
-
   int sinalEsquerda = analogRead(_sensorPins.sensorE);
   int sinalCentro = analogRead(_sensorPins.sensorC);
   int sinalDireita = analogRead(_sensorPins.sensorD);
@@ -117,10 +114,8 @@ void EngineControl::loop() {
   boolean sinalPDireitaIsActive = sinalPDireita < _referencia;
 
   if (sinalPEsquerdaIsActive && sinalEsquerdaIsActive && sinalCentroIsActive && sinalDireitaIsActive && sinalPDireitaIsActive) {
-    Serial.println("frente");
     frente();
   } else if (!sinalEsquerdaIsActive && sinalEsquerdaIsActive && sinalCentroIsActive && sinalDireitaIsActive && sinalPDireitaIsActive) { //ok
-    Serial.println("direita1");
     direita1();
   } else if (sinalPEsquerdaIsActive && sinalEsquerdaIsActive && sinalCentroIsActive && sinalDireitaIsActive && !sinalPDireitaIsActive) { //ok
     esquerda1();
@@ -155,18 +150,30 @@ void EngineControl::loop() {
 
 void EngineControl::setFrontLeftPins(EnginePins enginePins) {
   _frontLeftPins = enginePins;
+  pinMode(_frontLeftPins.rotation1, OUTPUT);
+  pinMode(_frontLeftPins.rotation2, OUTPUT);
+  pinMode(_frontLeftPins.velocity, OUTPUT);
 }
 
 void EngineControl::setFrontRightPins(EnginePins enginePins) {
   _frontRightPins = enginePins;
+  pinMode(_frontRightPins.rotation1, OUTPUT);
+  pinMode(_frontRightPins.rotation2, OUTPUT);
+  pinMode(_frontRightPins.velocity, OUTPUT);
 }
 
 void EngineControl::setBackLeftPins(EnginePins enginePins) {
   _backLeftPins = enginePins;
+  pinMode(_backLeftPins.rotation1, OUTPUT);
+  pinMode(_backLeftPins.rotation2, OUTPUT);
+  pinMode(_backLeftPins.velocity, OUTPUT);
 }
 
 void EngineControl::setBackRightPins(EnginePins enginePins) {
   _backRightPins = enginePins;
+  pinMode(_backRightPins.rotation1, OUTPUT);
+  pinMode(_backRightPins.rotation2, OUTPUT);
+  pinMode(_backRightPins.velocity, OUTPUT);
 }
 
 void EngineControl::setSensorPins(SensorPins sensorPins) {
