@@ -4,3 +4,6 @@
 [submodule "libraries/rfid"]
 	path = libraries/rfid
 	url = https://github.com/miguelbalboa/rfid.git
+[submodule "libraries/WiFiEsp"]
+	path = libraries/WiFiEsp
+	url = https://github.com/bportaluri/WiFiEsp.git
