@@ -1,3 +1,6 @@
 [submodule "libraries/PubSubClient"]
 	path = libraries/PubSubClient
 	url = https://github.com/knolleary/pubsubclient.git
+[submodule "libraries/rfid"]
+	path = libraries/rfid
+	url = https://github.com/miguelbalboa/rfid.git
