@@ -65,6 +65,13 @@ void EngineControl::direita4() {
   motor4(_velocidade*0.5, LOW, HIGH);
 }
 
+void EngineControl::direita() {
+  motor1(_velocidade, HIGH, LOW);
+  motor2(_velocidade, LOW, HIGH);
+  motor3(_velocidade, HIGH, LOW);
+  motor4(_velocidade, LOW, HIGH);
+}
+
 void EngineControl::esquerda1() {
   motor1(_velocidade*0.7, HIGH, LOW);
   motor2(_velocidade, HIGH, LOW);
@@ -93,11 +100,24 @@ void EngineControl::esquerda4() {
   motor4(_velocidade*1, HIGH, LOW);
 }
 
+void EngineControl::esquerda() {
+  motor1(_velocidade, LOW, HIGH);
+  motor2(_velocidade, HIGH, LOW);
+  motor3(_velocidade, LOW, HIGH);
+  motor4(_velocidade, HIGH, LOW);
+}
+
 void EngineControl::parar() {
   motor1(_velocidade, HIGH, HIGH);
   motor2(_velocidade, HIGH, HIGH);
   motor3(_velocidade, HIGH, HIGH);
   motor4(_velocidade, HIGH, HIGH);
+}
+void EngineControl::tras() {
+  motor1(_velocidade, LOW, HIGH);
+  motor2(_velocidade, LOW, HIGH);
+  motor3(_velocidade, LOW, HIGH);
+  motor4(_velocidade, LOW, HIGH);
 }
 
 void EngineControl::loop() {

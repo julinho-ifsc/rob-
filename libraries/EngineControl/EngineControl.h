@@ -3,12 +3,6 @@
 
 #include <Arduino.h>
 
-#define BASE_VELOCITY 75
-#define TINY_FACTOR 0.4
-#define SMALL_FACTOR 0.7
-#define MEDIUM_FACTOR 0.9
-#define NORMAL_FACTOR 1.0
-
 struct EnginePins {
     int velocity;
     int rotation1;
@@ -44,7 +38,6 @@ private:
     void esquerda2();
     void esquerda3();
     void esquerda4();
-    void frente();
 public:
     EngineControl(int velocity, int reference);
     void setFrontLeftPins(EnginePins enginePins);
@@ -52,6 +45,10 @@ public:
     void setBackLeftPins(EnginePins enginePins);
     void setBackRightPins(EnginePins enginePins);
     void setSensorPins(SensorPins sensorPins);
+    void direita();
+    void esquerda();
+    void frente();
+    void tras();
     void parar();
     void loop();
 };
