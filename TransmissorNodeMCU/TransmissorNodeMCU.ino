@@ -41,6 +41,7 @@ boolean reconnect() {
 
 void setup() {
   Serial.begin(115200);
+  Serial1.begin(115200);
   
   Serial.println();
   Serial.print("Connecting to ");
@@ -77,7 +78,7 @@ void loop() {
     return;
   }
   
-//  Serial2.print(message);
+  Serial1.print(message);
   Serial.println(message);
   message = "";
 
