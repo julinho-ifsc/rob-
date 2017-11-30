@@ -4,6 +4,10 @@ void setup() {
 }
 
 void loop() {
-  Serial2.print("d2d7e4d4-f;827277d4-p;");
+  Serial2.print("14f7d435-f;827277d4-p");
   delay(3000);
 }
+
+//8275d4d4
+//727c77d4
+//c29d77d4
