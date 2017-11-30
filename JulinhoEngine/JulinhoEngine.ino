@@ -9,7 +9,7 @@ const EnginePins BACK_RIGHT_ENGINE_PINS = {13, 11, 12};
 const SensorPins SENSOR_PINS = {A15, A14, A13, A12, A11};
 
 MFRC522 mfrc522(53, 5);
-EngineControl engineControl(60, 200);
+EngineControl engineControl(40, 200);
 NewPing sonar(23, 22);
 String message = "";
 String initialTag = "";
@@ -107,11 +107,11 @@ void loop() {
     engineControl.frente();
     Serial.println("ligando buzzer");
     digitalWrite(24, LOW);
-    delay(250);
+    delay(150);
     digitalWrite(24, HIGH);
-    delay(250);
+    delay(150);
     digitalWrite(24, LOW);
-    delay(250);
+    delay(150);
     digitalWrite(24, HIGH);
   } else if (currentDirection == "t") {
     engineControl.tras();
@@ -119,7 +119,7 @@ void loop() {
     engineControl.parar();
     Serial.println("ligando buzzer");
     digitalWrite(24, LOW);
-    delay(250);
+    delay(150);
     digitalWrite(24, HIGH);
     message = "";
     rfidIndex = 0;
