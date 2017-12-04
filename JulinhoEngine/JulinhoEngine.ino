@@ -18,7 +18,8 @@ boolean leavedBase = false;
 
 void setup() {
   Serial.begin(9600);
-  Serial2.begin(9600);
+  Serial1.begin(115200);
+  
   SPI.begin();
   mfrc522.PCD_Init();
   mfrc522.PCD_AntennaOn();
@@ -49,8 +50,8 @@ void loop() {
   String currentDirection;
 
   if (message == "") {
-    if (Serial2.available()) {
-      message = Serial2.readString();
+    if (Serial1.available()) {
+      message = Serial1.readString();
     }
     return;
   }
@@ -62,6 +63,10 @@ void loop() {
     }
     return;
   }
+
+  
+  Serial.println(message);
+  Serial.println();
 
   Serial.println("rfid encontrado");
   String rfidUid = "";
@@ -79,8 +84,6 @@ void loop() {
   }
 
   initialTag = rfidUid;
-
-  Serial.println(message);
 
   if (rfidUid == "bc521a14") {
     Serial.println("julinho na base");

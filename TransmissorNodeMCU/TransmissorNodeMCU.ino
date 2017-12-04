@@ -12,15 +12,6 @@ long lastReconnectAttempt = 0;
 String message = "";
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("]: ");
-  Serial.println();
-
-  Serial.print("Length: ");
-  Serial.print(length);
-  Serial.println();
-
   message = "";
   for (int i = 0; i < length; i++) {
     message += (char) payload[i];
@@ -31,7 +22,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 boolean reconnect() {
   if (mqttClient.connect("arduinoClient")) {
-    Serial.println("connected");
     mqttClient.publish("julinho/enable", "1");
     mqttClient.publish("julinho/sos", "0");
     mqttClient.subscribe("julinho/rota");
@@ -41,17 +31,11 @@ boolean reconnect() {
 
 void setup() {
   Serial.begin(115200);
-  Serial1.begin(115200);
-  
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
 
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
   }
   
   mqttClient.setServer(mqtt_server, 1883);
@@ -78,7 +62,6 @@ void loop() {
     return;
   }
   
-  Serial1.print(message);
   Serial.println(message);
   message = "";
 
