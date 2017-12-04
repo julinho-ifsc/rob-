@@ -9,7 +9,7 @@ const EnginePins BACK_RIGHT_ENGINE_PINS = {2, 40, 41};
 const SensorPins SENSOR_PINS = {A11, A12, A13, A14, A15};
 
 MFRC522 mfrc522(53, 5);
-EngineControl engineControl(40, 200);
+EngineControl engineControl(60, 200);
 NewPing sonar(23, 22);
 String message = "";
 String initialTag = "";
@@ -17,7 +17,7 @@ int rfidIndex = 0;
 boolean leavedBase = false;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial1.begin(115200);
   
   SPI.begin();
@@ -52,6 +52,7 @@ void loop() {
   if (message == "") {
     if (Serial1.available()) {
       message = Serial1.readString();
+      Serial.println(message);
     }
     return;
   }
@@ -63,10 +64,6 @@ void loop() {
     }
     return;
   }
-
-  
-  Serial.println(message);
-  Serial.println();
 
   Serial.println("rfid encontrado");
   String rfidUid = "";
@@ -85,16 +82,18 @@ void loop() {
 
   initialTag = rfidUid;
 
-  if (rfidUid == "bc521a14") {
+  if (rfidUid == "8275d4d4") {
     Serial.println("julinho na base");
     loopEngine();
     leavedBase = true;
+    Serial1.print(rfidUid);
     return;
   }
   
   int incomingRfidIndex = message.indexOf(rfidUid);
 
   if (incomingRfidIndex == rfidIndex) {
+    Serial1.print(rfidUid);
     currentDirection = message.substring(rfidIndex + 9, rfidIndex + 10);
     rfidIndex += 11;
   }

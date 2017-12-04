@@ -54,6 +54,13 @@ void loop() {
     return;
   }
 
+  if (Serial.available()) {
+    String message = Serial.readString();
+    char *check;
+    message.toCharArray(check, message.length());
+    mqttClient.publish("julinho/check", check);
+  }
+
   boolean routeExists = message.compareTo("") != 0;
 
   if (!routeExists) {
