@@ -60,7 +60,8 @@ void loop() {
     tone(4, melody[i], 2980/time[i]);
     delay(3000/time[i]);   
   }
-
+  digitalWrite(4, HIGH);
+  delay(1000);
 
 
 
