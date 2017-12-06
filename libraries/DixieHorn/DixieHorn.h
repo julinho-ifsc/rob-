@@ -3,11 +3,11 @@
 
 #include <Arduino.h>
 
-class EngineControl {
+class DixieHorn {
 private:
     int _pin;
-    int _time[];
-    int _melody[];
+    int _time[12];
+    int _melody[12];
 public:
     DixieHorn(int pin);
     void play();

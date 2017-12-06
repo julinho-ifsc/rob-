@@ -19,11 +19,11 @@ boolean leavedBase = false;
 void setup() {
   Serial.begin(115200);
   Serial1.begin(115200);
-  
+
   SPI.begin();
   mfrc522.PCD_Init();
   mfrc522.PCD_AntennaOn();
-  mfrc522.PCD_SetAntennaGain(0x07 << 4);
+//  mfrc522.PCD_SetAntennaGain(0x07 << 4);
 
   pinMode(4, OUTPUT);
 
@@ -89,7 +89,7 @@ void loop() {
     Serial1.print(rfidUid);
     return;
   }
-  
+
   int incomingRfidIndex = message.indexOf(rfidUid);
 
   if (incomingRfidIndex == rfidIndex) {
@@ -101,13 +101,13 @@ void loop() {
   Serial.print("nova direção: ");
   Serial.println(currentDirection);
 
+  Serial.println(message);
   if (currentDirection == "d") {
     engineControl.direita();
   } else if (currentDirection == "e") {
     engineControl.esquerda();
   } else if (currentDirection == "f") {
     engineControl.frente();
-    Serial.println("ligando buzzer");
     digitalWrite(4, LOW);
     delay(150);
     digitalWrite(4, HIGH);

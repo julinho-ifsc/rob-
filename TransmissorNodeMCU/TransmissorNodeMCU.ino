@@ -1,3 +1,4 @@
+#include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
@@ -10,6 +11,8 @@ PubSubClient mqttClient(espClient);
 
 long lastReconnectAttempt = 0;
 String message = "";
+
+SoftwareSerial wifiSerial(D7, D8);
 
 void callback(char* topic, byte* payload, unsigned int length) {
   message = "";
@@ -31,12 +34,17 @@ boolean reconnect() {
 
 void setup() {
   Serial.begin(115200);
+  wifiSerial.begin(115200);
 
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
+    Serial.println("not connected");
     delay(500);
   }
+
+  Serial.println("connected");
+  
   
   mqttClient.setServer(mqtt_server, 1883);
   mqttClient.setCallback(callback);
@@ -54,10 +62,12 @@ void loop() {
     return;
   }
 
-  if (Serial.available()) {
-    String message = Serial.readString();
-    char *check;
-    message.toCharArray(check, message.length());
+  if (wifiSerial.available()) {
+    Serial.println("check");
+    String messageCheck = wifiSerial.readString();
+    Serial.println(messageCheck);
+    char check[messageCheck.length()];
+    messageCheck.toCharArray(check, messageCheck.length());
     mqttClient.publish("julinho/check", check);
   }
 
@@ -69,6 +79,7 @@ void loop() {
     return;
   }
   
+  wifiSerial.print(message);
   Serial.println(message);
   message = "";
 
