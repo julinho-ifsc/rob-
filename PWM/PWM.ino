@@ -1,113 +1,56 @@
-
-/*-IMPORTACAO DO LCD COM I2C*/
 #include <Wire.h>
 
-// PINO DO SENSOR DE TENSAO ANALÓGICA(A2) UTILIZADA PELO SENSOR DE TENSÃO
-int sensorTensaoDC = A1;
+const int SENSOR_DC_PIN = A1;
+const int LED_PIN = 13;
+const int MIN_VOLTS = 7;
+const int SAMPLES_NUMBER = 1000;
+const float RESISTOR_1_VALUE = 32600.0;
+const float RESISTOR_2_VALUE = 6810.0;
+const float VOLTS_BY_UNIT = 0.004887586;
+const float VOLTAGE_PWM_PROPORTION = 731.85;
 
-// DECLARAÇÃO DE VARIÁVEL QUE RECEBE O VALOR LIDO NA PORTA ANALÓGICA A1
-float valorTensaoDC;
+void setup() {
+  Serial.begin(9600);
 
-// DECLARAÇÃO DA VARIÁVEL DA MEDIA DE AMOSTRAGEM
-int amostragem =1000;
+  analogReference(DEFAULT);
 
-// DECLARAÇÃO DA VARIÁVEL DA SOMA DA MEDIA DE AMOSTRAGEM
-float mediaTotalTensaoDC =0;
-
-// DECLARAÇÃO DE VARIÁVEL QUE RECEBE O VALOR FINAL CONVERTIDO EM VOLTS DC
-float valorFinalTensaoDC = 0;
-
-//VARIAVEIS COM OS VALORES DOS RESISTORES DO SENSOR DE TENSÃO DC
-float R1 = 32600.0;
-float R2 = 6810.0;
-
-// DECLARAÇÃO LED
-const int led = 13;
-
-
-
-// DECLARAÇÃO DA VARIÁVEL AUXILIAR
-int sensorValue_aux = 0;
-
-// DECLARAÇÃO DA VARIÁVEL DA CONSTANTE DO ADC 5/1023
-float voltsporUnidade = 0.004887586;// 5%1023
-
-void setup(){
- // LED
- pinMode(led,OUTPUT);
-
- //VALOR REFERENCIAL
- analogReference(DEFAULT);
-
-// INICIALIZA A PORTA SERIAL
- Serial.begin(9600);
-
-// DECLARA QUE A PORTA DO SENSOR DE TENSAO DC
- pinMode(sensorTensaoDC, INPUT);
-
- //DECLARA O MODO DE OPERAÇÃO DO LED
-   pinMode(led, OUTPUT);
-
- delay(500);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(SENSOR_DC_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
+  float voltageAccumulator = 0;
 
-//REINICIA O VALOR ATUAL E ATUALIZA NA PRÓXIMA LEITURA
- valorFinalTensaoDC = 0;
+  for (int i = 0; i < SAMPLES_NUMBER; i++) {
+    float voltageReading = analogRead(SENSOR_DC_PIN);
+    float voltageValue = voltageReading * VOLTS_BY_UNIT;
 
- //REINICIA O VALOR ATUAL E ATUALIZA NA PRÓXIMA LEITURA
- mediaTotalTensaoDC = 0;
+    voltageAccumulator = voltageAccumulator + (voltageValue / (RESISTOR_2_VALUE / (RESISTOR_1_VALUE + RESISTOR_2_VALUE)));
 
- //INICIA A AQUISIÇÃO DOS VALORES PARA MEDIR A CORRENTE CONSUMIDA
- //INICIA A AQUISIÇÃO DOS VALORES PARA MEDIR A TENSÃO CONSUMIDA
-   for(int i=0; i < amostragem ; i++){
+    delay(1);
+  }
 
-  //LEITURA DO VALOR NA PORTA ANALÓGICA(VARIA DE 0 ATÉ 1023)
-   valorTensaoDC = analogRead(sensorTensaoDC);
-   //CALCULA O VALOR A PARTIR DA RESOLUÇÃO DO ADC
-   valorTensaoDC =(valorTensaoDC*voltsporUnidade);
-   //INCLUE NO CALCULO OS VALORES DO DIVISOR DE TENSÃO
-   mediaTotalTensaoDC = mediaTotalTensaoDC+ (valorTensaoDC / (R2/(R1+R2)));
+  float averageVoltage = voltageAccumulator / SAMPLES_NUMBER;
+  float finalVelocity = VOLTAGE_PWM_PROPORTION / averageVoltage;
 
-     //UM PEQUENO INTERVALO ENTRE AS LEITURAS
-     delay(1);
+  Serial.println("VALOR ATRIBUIDO A PWM: ");
+  Serial.println(finalVelocity);
+
+  if (averageVoltage <= MIN_VOLTS) {
+    Serial.println("NÍVEL DE TENSÃO FORA DO IDEAL, FAVOR TROCAR BATERIAS");
+    digitalWrite(LED_PIN, HIGH);
+    delay(100);
+    digitalWrite(LED_PIN, LOW);
+    delay(100);
+    digitalWrite(LED_PIN, HIGH);
+    delay(100);
+    digitalWrite(LED_PIN, LOW);
  }
 
-  //RETIRA A MEDIA DOS VALORES DE LEITURA
-  valorFinalTensaoDC = mediaTotalTensaoDC / amostragem;
+  Serial.print("LEITURA DE: ");
+  Serial.print(averageVoltage);
+  Serial.println(" VOLTS");
 
-
-// FUNCAO PWM
-
-float valor_calculo = valorFinalTensaoDC;
-
-float funcao_PWM = 731.85 / valor_calculo;
-Serial.println("VALOR ATRIBUIDO A PWM: ");
-Serial.println(funcao_PWM);
-
-
-//ACENDER LED CASO ESTEJA ABAIXO DE 7 VOLTS
-if (valorFinalTensaoDC <= 7) {
-     Serial.println("NÍVEL DE TENSÃO FORA DO IDEAL, FAVOR TROCAR BATERIAS");
-     digitalWrite(led, HIGH);
-     delay(100);
-     digitalWrite(led, LOW);
-     delay(100);
-     digitalWrite(led, HIGH);
-     delay(100);
-     digitalWrite(led, LOW);
- }
-
-
-
- //SAÍDA NA JANELA COM INFORMAÇÕES DA PORTA SERIAL
- Serial.print("LEITURA DE: ");
- //SAÍDA NA JANELA COM INFORMAÇÕES DA PORTA SERIAL
- Serial.print(valorFinalTensaoDC);
- //SAÍDA NA JANELA COM INFORMAÇÕES DA PORTA SERIAL
- Serial.println(" VOLTS");
-
-
-delay(1000);
+  delay(1000);
 }
