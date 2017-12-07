@@ -23,7 +23,6 @@ void setup() {
   SPI.begin();
   mfrc522.PCD_Init();
   mfrc522.PCD_AntennaOn();
-//  mfrc522.PCD_SetAntennaGain(0x07 << 4);
 
   pinMode(4, OUTPUT);
 
@@ -82,14 +81,6 @@ void loop() {
 
   initialTag = rfidUid;
 
-  if (rfidUid == "8275d4d4") {
-    Serial.println("julinho na base");
-    loopEngine();
-    leavedBase = true;
-    Serial1.print(rfidUid);
-    return;
-  }
-
   int incomingRfidIndex = message.indexOf(rfidUid);
 
   if (incomingRfidIndex == rfidIndex) {
@@ -102,7 +93,10 @@ void loop() {
   Serial.println(currentDirection);
 
   Serial.println(message);
-  if (currentDirection == "d") {
+  if (currentDirection == "b") {
+    loopEngine();
+    leavedBase = true;
+  } else if (currentDirection == "d") {
     engineControl.direita();
   } else if (currentDirection == "e") {
     engineControl.esquerda();
