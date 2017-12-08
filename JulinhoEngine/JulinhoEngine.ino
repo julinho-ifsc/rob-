@@ -9,12 +9,13 @@ const EnginePins BACK_RIGHT_ENGINE_PINS = {13, 11, 12};
 const SensorPins SENSOR_PINS = {A15, A14, A13, A12, A11};
 
 MFRC522 mfrc522(53, 5);
-EngineControl engineControl(40, 200);
+EngineControl engineControl(60, 200);
 NewPing sonar(23, 22);
 String message = "";
 String initialTag = "";
 int rfidIndex = 0;
 boolean leavedBase = false;
+const int BUZZER = 4;
 
 void setup() {
   Serial.begin(9600);
@@ -25,7 +26,7 @@ void setup() {
   mfrc522.PCD_AntennaOn();
   mfrc522.PCD_SetAntennaGain(0x07 << 4);
 
-  pinMode(24, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
 
   engineControl.setFrontLeftPins(FRONT_LEFT_ENGINE_PINS);
   engineControl.setBackLeftPins(BACK_LEFT_ENGINE_PINS);
@@ -46,7 +47,7 @@ void loopEngine() {
 }
 
 void loop() {
-  digitalWrite(24, HIGH);
+  digitalWrite(BUZZER, HIGH);
   String currentDirection;
 
   if (message == "") {
@@ -85,13 +86,6 @@ void loop() {
 
   initialTag = rfidUid;
 
-  if (rfidUid == "bc521a14") {
-    Serial.println("julinho na base");
-    loopEngine();
-    leavedBase = true;
-    return;
-  }
-  
   int incomingRfidIndex = message.indexOf(rfidUid);
 
   if (incomingRfidIndex == rfidIndex) {
@@ -102,28 +96,31 @@ void loop() {
   Serial.print("nova direção: ");
   Serial.println(currentDirection);
 
-  if (currentDirection == "d") {
+  if (currentDirection == "b") {
+    loopEngine();
+    leavedBase = true;
+  } else if (currentDirection == "d") {
     engineControl.direita();
   } else if (currentDirection == "e") {
     engineControl.esquerda();
   } else if (currentDirection == "f") {
     engineControl.frente();
     Serial.println("ligando buzzer");
-    digitalWrite(24, LOW);
+    digitalWrite(BUZZER, LOW);
     delay(150);
-    digitalWrite(24, HIGH);
+    digitalWrite(BUZZER, HIGH);
     delay(150);
-    digitalWrite(24, LOW);
+    digitalWrite(BUZZER, LOW);
     delay(150);
-    digitalWrite(24, HIGH);
+    digitalWrite(BUZZER, HIGH);
   } else if (currentDirection == "t") {
     engineControl.tras();
   } else if (currentDirection == "p") {
     engineControl.parar();
     Serial.println("ligando buzzer");
-    digitalWrite(24, LOW);
+    digitalWrite(BUZZER, LOW);
     delay(150);
-    digitalWrite(24, HIGH);
+    digitalWrite(BUZZER, HIGH);
     message = "";
     rfidIndex = 0;
     leavedBase = false;
