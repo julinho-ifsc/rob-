@@ -18,7 +18,7 @@ boolean leavedBase = false;
 const int BUZZER = 4;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial1.begin(115200);
   
   SPI.begin();
@@ -53,6 +53,7 @@ void loop() {
   if (message == "") {
     if (Serial1.available()) {
       message = Serial1.readString();
+      Serial.println(message);
     }
     return;
   }
@@ -64,10 +65,6 @@ void loop() {
     }
     return;
   }
-
-  
-  Serial.println(message);
-  Serial.println();
 
   Serial.println("rfid encontrado");
   String rfidUid = "";
@@ -89,6 +86,7 @@ void loop() {
   int incomingRfidIndex = message.indexOf(rfidUid);
 
   if (incomingRfidIndex == rfidIndex) {
+    Serial1.print(rfidUid);
     currentDirection = message.substring(rfidIndex + 9, rfidIndex + 10);
     rfidIndex += 11;
   }
@@ -96,6 +94,7 @@ void loop() {
   Serial.print("nova direção: ");
   Serial.println(currentDirection);
 
+  Serial.println(message);
   if (currentDirection == "b") {
     loopEngine();
     leavedBase = true;
@@ -105,7 +104,6 @@ void loop() {
     engineControl.esquerda();
   } else if (currentDirection == "f") {
     engineControl.frente();
-    Serial.println("ligando buzzer");
     digitalWrite(BUZZER, LOW);
     delay(150);
     digitalWrite(BUZZER, HIGH);
@@ -126,4 +124,5 @@ void loop() {
     leavedBase = false;
   }
 }
+
 
