@@ -21,7 +21,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 boolean reconnect() {
-  if (mqttClient.connect("arduinoClient")) {
+  String clientId = "ESP8266Client-";
+  clientId += String(random(0xffff), HEX);
+  
+  if (mqttClient.connect(clientId.c_str())) {
     mqttClient.publish("julinha/enable", "1");
     mqttClient.publish("julinha/sos", "0");
     mqttClient.subscribe("julinha/rota");
