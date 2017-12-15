@@ -63,7 +63,7 @@ void loop() {
 
   Serial.println(rfidUid);
 
-  if (rfidUid == "c29d77d4") {
+  if (rfidUid == "75224441") {
     Serial.println("right");
     dixieHorn();
   } else {
